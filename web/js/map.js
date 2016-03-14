@@ -16,26 +16,6 @@ window.onload = function () {
     var bounds = [73.4510046356223, 18.1632471876417,
         134.976797646506, 53.5319431522236];
     var controls = new Array();
-    //鼠标位置
-    // var hdms = ol.coordinate.toStringHDMS(ol.proj.transform(  
-// coordinate, 'EPSG:3857', 'EPSG:4326'));  
-    // var mousePositionControl = new ol.control.MousePosition({
-    //     className: 'custom-mouse-position',
-    //     target: document.getElementById('location'),
-    //     coordinateFormat: ol.coordinate.toStringHDMS(),//保留5位小数
-    //     undefinedHTML: ' '
-
-    // });
-    // controls.push(mousePositionControl);
-
-    //缩放至范围
-    // var zoomToExtentControl = new ol.control.ZoomToExtent({
-    //     extent: bounds,
-    //     className: 'zoom-to-extent',
-    //     tipLabel:"全图"
-    // });
-    // controls.push(zoomToExtentControl);
-
     //比例尺
     var scaleLineControl = new ol.control.ScaleLine({});
     controls.push(scaleLineControl);
@@ -80,27 +60,37 @@ window.onload = function () {
     var baidu_layer = new ol.layer.Tile({
         source: baidu_source
     });
+    //create the style
+    var iconStyle = new ol.style.Style({
+        fill:new ol.style.Fill({
+            color:'rgba(255,255,255,0.2)'
+        }),
+        stroke:new ol.style.Stroke({
+            color:'#0c95f8',
+            width:2
+        }),
+        image: new ol.style.Icon( ({
+            anchor: [0.5, 46],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'pixels',
+            opacity: 0.75,
+            src: 'http://openlayers.org/en/v3.9.0/examples/data/icon.png'
+        }))
+    });
 
     //临时图层的数据源  
     source=new ol.source.Vector();
     //新建临时图层，并设置临时图层渲染各种要素的样式  
     var vector=new ol.layer.Vector({
         source:source,
-        style:new ol.style.Style({
-            fill:new ol.style.Fill({
-                color:'rgba(255,255,255,0.2)'
-            }),
-            stroke:new ol.style.Stroke({
-                color:'#0c95f8',
-                width:2
-            }),
-            image:new ol.style.Circle({
-                radius:7,
-                fill:new ol.style.Fill({
-                    color:'#0c95f8'
-                })
-            })
-        })
+        style: iconStyle
+    });
+    //临时测距图层的数据源
+    range_source = new ol.source.Vector();
+    //新建临时图层，并设置临时图层渲染各种要素的样式
+    var range_vector = new ol.layer.Vector({
+        source:range_source,
+        style:new ol.style.Style()
     });
     map = new ol.Map({
         controls: ol.control.defaults({
@@ -110,7 +100,7 @@ window.onload = function () {
                     new ol.interaction.DragRotateAndZoom()
                 ]),
         target: 'map',
-        layers: [baidu_layer,vector],
+        layers: [baidu_layer,vector,range_vector],
         view: new ol.View({
             center:  [12959773,4853101],//设置地图中心
             zoom: 5 //初始的缩放等级
@@ -118,7 +108,7 @@ window.onload = function () {
     });
     // map.getView().fitExtent(bounds, map.getSize());
 
-}
+};
 
 function setMarkUnFlod(ulname,name,count){
     var links =  document.getElementById(ulname).getElementsByTagName('li');
@@ -135,8 +125,6 @@ function setMarkUnFlod(ulname,name,count){
                     sketchElement.innerHTML ="";
                 }
                 check();
-                map.removeInteraction(draw1);
-                map.removeInteraction(draw2);
             }else if(menu.style.display == "none" || menu.style.display == ""){
                 menu.style.display = "block"; 
                 menu.parentNode.className ="list-title-down";
@@ -145,6 +133,8 @@ function setMarkUnFlod(ulname,name,count){
                     sketchElement.innerHTML ="";
                 }
             }
+            map.removeInteraction(draw1);
+            map.removeInteraction(draw2);
         }else if(menu){
             menu.style.display = "none";
             measurePopup.style.display = "none";
@@ -188,14 +178,14 @@ function init(ulname,name,count){
             sketchElement.innerHTML=output;
 
         }
-    }
+    };
     viewport.addEventListener('mousemove',mouseMoveHandler);
 
     function addInteraction2(map,typeSelect,source){
         var type=typeSelect.value=='area'?'Polygon':'LineString';
          if(typeSelect.value!=='None'){
             draw2=new ol.interaction.Draw({
-                source:source,
+                source:range_source,
                 type:(type)
 
             });
@@ -239,7 +229,5 @@ function init(ulname,name,count){
     };
 
     setMarkUnFlod(ulname,name,count);
-    
-
 }
 

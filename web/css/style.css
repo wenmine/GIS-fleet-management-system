@@ -1,0 +1,78 @@
+*{margin: 0;padding: 0;}
+body{
+    font-family:"SimSun", "Microsoft YaHei";
+    background: url("../image/bg.jpg") no-repeat;}
+h1{
+    margin:120px auto 50px auto;
+    text-align:center;
+    color:#fff;
+    margin-left:-25px;
+    font-size:50px;
+    font-weight: bold;
+}
+.container{
+    background: #ffffff;
+    position: absolute;
+    top:25%;
+    left: 50%;
+    width: 480px;
+    height: 280px;
+    border: double 2px #ccc;
+    text-align: center;
+    margin-left: -240px;
+}
+.container h2{
+    text-align:center;
+    height:50px;
+    line-height:50px;
+    background:#eee;
+    color:#4F4F4F;
+}
+.user{
+    margin-top: 30px;
+    height: 35px;
+}
+.user .usr_img{
+    position:absolute;
+    width:39px;
+    height:35px;
+    top: 80px;
+    left: 12%;
+    background-image:url("../image/user.png");
+}
+.userpasswd{margin-top: 30px;margin-bottom: 25px;}
+.userpasswd .pwd_img{
+    position:absolute;
+    width:39px;
+    height:35px;
+    top: 145px;
+    left: 12%;
+    background-image: url("../image/password.png");}
+.userinfo{
+    font-size: 14px;
+    width:300px;
+    height: 35px;
+    line-height: normal;
+    margin-left:30px;
+    padding:0;
+    outline: none;
+}
+.submit{
+    width:120px;
+    height:40px;
+    border:none;
+    background:#0066CC;
+    color:#ffffff;
+    font-size: 18px;
+    margin-left:210px;
+    cursor: pointer;
+}
+.submit:hover{
+    background: #0072E3;
+}
+.login-oper{
+    position:absolute;
+    height:35px;
+    top: 220px;
+    left: 14%;
+}

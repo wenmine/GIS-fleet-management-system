@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>船队管理系统</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!--<script src="login_cookie.js"></script>-->
+</head>
+<body>
+<h1>GIS船队管理系统</h1>
+<div id="container" class="container">
+    <h2>登录</h2>
+    <form method="post">
+        <div class="user">
+            <span class="usr_img"></span>
+            <input type="text" name="username" placeholder="用户名" required="required" id="username" class="userinfo" onblur="GetPwdAndChk()"/>
+        </div>
+        <div class="userpasswd">
+            <span class="pwd_img"></span>
+            <input type="password" name="password" placeholder="密码" required="required" id="passwd" class="userinfo"/>
+        </div>
+        <div class="login-oper">
+            <input name="savePW" type="checkbox" value="savePW"  id="savePW"/>&nbsp;记住密码
+        </div>
+        <input type="submit" value="登录" id="submit" class="submit" OnClick="SetPwdAndChk()"/>
+    </form>
+</div>
+</body>
+</html>

@@ -133,6 +133,7 @@ a{
 }
 .dynamic-ship-list{
     width: 280px;
+    cursor: pointer;
 }
 .dynamic-ship-list a{
     text-decoration: none;

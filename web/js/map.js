@@ -122,7 +122,9 @@ function setMarkUnFlod(ulname,name,count){
                 menu.parentNode.className ="list-title-up";
                 if(count == 3){
                     measurePopup.style.display = "none";
-                    sketchElement.innerHTML ="";
+                    if(sketchElement){
+                        sketchElement.innerHTML ="";
+                    }
                 }
                 check();
             }else if(menu.style.display == "none" || menu.style.display == ""){
@@ -130,7 +132,9 @@ function setMarkUnFlod(ulname,name,count){
                 menu.parentNode.className ="list-title-down";
                  if(count == 3){
                     measurePopup.style.display = "block";
-                    sketchElement.innerHTML ="";
+                     if(sketchElement){
+                        sketchElement.innerHTML ="";
+                     }
                 }
             }
             map.removeInteraction(draw1);

@@ -146,7 +146,7 @@ function setMarkUnFlod(ulname,name,count){
         }
     }
 }
-
+/*实现标注与测距功能*/
 function init(ulname,name,count){
     /*标注开始*/
     var typeSelected=document.getElementById('drawtype');

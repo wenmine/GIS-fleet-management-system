@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="http://openlayers.org/en/v3.13.1/css/ol.css" type="text/css">
     <script src="js/jquery-1.12.1.min.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/formCheck.js"></script>
     <script src="js/fleet.js"></script>
 </head>
 <body onbeforeunload="check()">
@@ -93,7 +94,7 @@
                 <p><label>船舶登记号：</label> <input type="text" name="number" id="number" required="required"/></p>
                 <p><label>中文船名：</label><input type="text" name="chinese_name"  required="required"/></p>
                 <p><label>英文船名：</label> <input type="text" name="english_name"  required="required"/></p>
-                <p><label>船舶呼号：</label> <input type="text" name="call_sign"  required="required"/></p>
+                <p><label>船舶呼号：</label> <input type="text" name="call_sign"  id="call_sign" required="required"/></p>
                 <p><label>船舶种类：</label> <input type="text" name="ship_kind"  required="required"/></p>
                 <p><label>船旗国：</label> <input type="text" name="ship_flag"  required="required"/></p>
                 <p><label>船舶拥有者：</label><input type="text" name="ship_owner"  required="required"/></p>

@@ -28,7 +28,7 @@ function setOn(name, count) {
         } else {
             menu.className = "";
             menu.className = "out";
-            if (i != 0) {
+            if ( 0 != i ) {
                 document.getElementById("left-nav" + i).style.display = "none";
             }
         }

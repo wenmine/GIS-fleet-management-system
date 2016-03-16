@@ -32,23 +32,15 @@ var getCheckObject = function () {
     }
 
     function isValidNum(value) {
-        var reg = new RegExp("^\d{9}$");
+        var reg = new RegExp("^[0-9]{9}$");
         var hasEnouthDigital = reg.test(value);
-        if (!hasEnouthDigital) {
-            return false;
-        } else {
-            return true;
-        }
+        return hasEnouthDigital;
     }
 
     function isValidCall(callvalue) {
-        var reg = new RegExp("^\d{4}$");
-        var hasEnouthDigital = reg.test(callvalue);
-        if (!hasEnouthDigital) {
-            return false;
-        } else {
-            return true;
-        }
+        var reg = new RegExp("^[0-9]{4}$");
+        var hasEnouthDigital = reg.test(value);
+        return hasEnouthDigital;
     }
 
     return {
@@ -82,7 +74,7 @@ function wOpen() {
         checkObj.removeErrorTip(shipNum, 'number');
     }, false);
     shipCall.addEventListener('blur', function (event) {
-        if (!checkObj.isValidPassword(shipCall.value)) {
+        if (!checkObj.isValidCall(shipCall.value)) {
             checkObj.addErrorTip(shipCall, 'call_sign');
         }
     }, false);
@@ -109,32 +101,34 @@ function addShipSubmitCheck() {
     var addShip = document.getElementById("add-ship");
     var inputList = addShip.getElementsByTagName('input');
     var i = 0;
-    var nullFlag;
+    var nullFlag = true;
+    var numFlag = true;
+    var callFlag = true;
+
     for (i = 0; i < inputList.length; i++) {
         if (inputList[i].value == "") {
             nullFlag = false;
             checkObj.addErrorTip(inputList[i]);
         } else if (inputList[i].name === "number") {
-            shipNum =inputList[i];
-            if (!checkObj.isValidNum(inputList[i].value)) {
-                flag = false;
+            numFlag = checkObj.isValidNum(inputList[i].value);
+            if (!numFlag) {
                 checkObj.addErrorTip(inputList[i], 'number');
                 event.preventDefault();
-
             }
         } else if (inputList[i].name === "call_sign") {
-            shipCall =inputList[i];
-            if (!checkObj.isValidCall(inputList[i].value)) {
-                flag = false;
+            callFlag = checkObj.isValidCall(inputList[i].value);
+            if (!callFlag) {
                 checkObj.addErrorTip(inputList[i], 'call_sign');
                 event.preventDefault();
-
             }
         }
     }
+    return (nullFlag && numFlag && callFlag);
 }
 function addShipSubmit() {
-    addShipSubmitCheck();
+    if(!addShipSubmitCheck()){
+        return;
+    }
     document.getElementById("add-ship").style.display = "none";
     var shipElement = document.createElement("li");
     var shipA = document.createElement("a");

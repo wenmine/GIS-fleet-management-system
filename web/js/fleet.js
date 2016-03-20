@@ -1,6 +1,7 @@
 /**
  * Created by Administrator on 2016/3/14.
  */
+    //封装form表单验证
 var getCheckObject = function () {
     var tipNum = document.createElement("span");
     tipNum.className = "error";
@@ -16,7 +17,7 @@ var getCheckObject = function () {
         } else if (name === "call_sign") {
             node.parentNode.appendChild(tipCall);
         } else {
-            if (node.nextElementSibling !== null) {
+            if (node.parentNode.lastChild.className === "error") {
                 return;
             }
             var tipOther = document.createElement("span");
@@ -27,8 +28,8 @@ var getCheckObject = function () {
     }
 
     function removeErrorTip(node) {
-        if (node.nextElementSibling !== null) {
-            node.parentNode.removeChild(node.nextElementSibling);
+        if (node.parentNode.lastChild.className === "error") {
+            node.parentNode.removeChild(node.parentNode.lastChild);
         }
     }
 
@@ -53,7 +54,7 @@ var getCheckObject = function () {
 };
 var checkObj = getCheckObject();
 
-//每次打开对话框时将里面的原先的值清空
+//每次打开对话框时将里面的表单原先的值清空
 function clearForm() {
     var objId = document.getElementById("add-ship-form");
     if (objId == undefined) {
@@ -85,7 +86,7 @@ function clearForm() {
         }
     }
 }
-
+//添加\移除错误信息
 function iterateInputAddFocusListener() {
     var addShip = document.getElementById("add-ship");
     var inputList = addShip.getElementsByTagName('input');
@@ -129,7 +130,6 @@ function iterateInputAddFocusListener() {
 
 function wOpen() {
     document.getElementById("add-ship").style.display = "block";
-    $("#add-ship").css("display", "block");
     iterateInputAddFocusListener();
 }
 function wClose(that) {
@@ -148,6 +148,7 @@ function delShipHandler(shipElement, event) {
     stopEvent(event);
 }
 
+//提交时表单验证
 function addShipSubmitCheck() {
     var addShip = document.getElementById("add-ship");
     var inputList = addShip.getElementsByTagName('input');
@@ -175,18 +176,41 @@ function addShipSubmitCheck() {
     }
     return (nullFlag && numFlag && callFlag);
 }
-function addShipSubmit() {
-    if (!addShipSubmitCheck()) {
-        return;
+class ShipInfo {
+    constructor(number, chinese_name, english_name, call_sign,
+                ship_kind, ship_flag, ship_owner, ship_port) {
+        this.number = number;
+        this.chinese_name = chinese_name;
+        this.english_name = english_name;
+        this.call_sign = call_sign;
+        this.ship_kind = ship_kind;
+        this.ship_flag = ship_flag;
+        this.ship_owner = ship_owner;
+        this.ship_port = ship_port;
     }
-    document.getElementById("add-ship").style.display = "none";
+}
+var shipMap = new Map();
+function createShipObj(){
+    var shipNumValue= document.getElementById("number").value;
+    var chineseNameValue= document.getElementById("chinese-name").value;
+    var englishNameValue= document.getElementById("english-name").value;
+    var callSignValue= document.getElementById("call-sign").value;
+    var shipKindValue= document.getElementById("ship-kind").value;
+    var shipFlagValue= document.getElementById("ship-flag").value;
+    var shipOwnerValue= document.getElementById("ship-owner").value;
+    var shipPortValue= document.getElementById("ship-port").value;
+    var shipObj = new ShipInfo(shipNumValue,chineseNameValue,englishNameValue,callSignValue,
+        shipKindValue,shipFlagValue,shipOwnerValue,shipPortValue);
+    shipMap.set(shipNumValue,shipObj);
+}
+function addShipInfoToList(){
+    createShipObj();
     var shipElement = document.createElement("li");
     var shipA = document.createElement("a");
     var shipSpan1 = document.createElement("span");
     var shipSpan2 = document.createElement("span");
-    var shipNum = document.getElementById("number");
     var shipList = document.getElementById("submenu-one1");
-    var num;
+    var shipNumValue= document.getElementById("number").value;
     console.log(shipElement);
     if (shipList.childNodes) {
         if (shipList.childNodes[0])
@@ -201,8 +225,7 @@ function addShipSubmit() {
     shipElement.appendChild(shipA);
     shipElement.insertBefore(shipSpan1, shipElement.lastChild.nextElementSibling);
     shipElement.insertBefore(shipSpan2, shipElement.lastChild.nextElementSibling);
-    num = shipNum.value;
-    shipA.innerHTML = shipNum.value;
+    shipA.innerHTML =shipNumValue;
     if (shipElement) {
         shipElement.onclick = function () {
             stopEvent(event);
@@ -210,7 +233,7 @@ function addShipSubmit() {
     }
     if (shipSpan1) {
         shipSpan1.onclick = function () {
-            editShipHandler(num, event);
+            editShipHandler(shipNumValue, event);
         };
     }
     if (shipSpan2) {
@@ -218,5 +241,13 @@ function addShipSubmit() {
             delShipHandler(shipElement, event);
         };
     }
+}
+//验证后更新信息到我的船队中
+function addShipSubmit() {
+    if (!addShipSubmitCheck()) {
+        return;
+    }
+    document.getElementById("add-ship").style.display = "none";
+    addShipInfoToList();
     clearForm();
 }

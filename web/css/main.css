@@ -67,7 +67,7 @@ a{
 }
 .content{
     width:100%;
-    height: 100%;
+    height: 540px;
     margin:-10px auto 0 auto;
     position:relative;
 }
@@ -75,7 +75,7 @@ a{
     list-style: none;
     position: absolute;
     width: 14%;
-    height: 100%;
+    height: 540px;
 }
 .left-nav1 li{
     width: 100%;
@@ -164,22 +164,25 @@ a{
     display: none;
 }
 .map {
-    width: 85%;
     position: absolute;
     right: 0;
     left: 14%;
+    width: 85%;
+    height: 540px;
     border-left: 1px solid #ccc;
 }
 
-.add-ship{
+.add-ship {
     width: 582px;
-    height: 562px;
+    height: 532px;
     position: absolute;
     left: 50%;
     margin-left: -240px;
-    margin-top: 50px;
+    margin-top: 5px;
     display: none;
-    background: url("../image/addship-bg.png") no-repeat;
+    /*background-color: #fff;*/
+     background: url("../image/addship-bg.png") no-repeat;
+    /*border: solid 1px #ccc;*/
 }
 #popup-top {
     height: 35px;
@@ -207,7 +210,7 @@ a{
 .add-ship div {
     color: #1170b4;
     font-size: 16px;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
     text-indent: 16px;
 }
 .add-ship div label {
@@ -215,7 +218,7 @@ a{
     width: 113px;
     height: 30px;
     line-height: 30px;
-    margin-left: 75px;
+    margin-left: 70px;
 }
 .add-ship div input{
     font-size: 16px;
@@ -226,7 +229,7 @@ a{
     border: solid 1px #ccc;
 }
 #addShipSubmit {
-    margin-left: 91px;
+    margin-left: 85px;
     width: 333px;
     height: 40px;
     border: none;

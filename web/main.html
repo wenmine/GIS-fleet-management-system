@@ -90,16 +90,17 @@
         <div id="add-ship-content">
             <form method="post" id="add-ship-form">
                 <div>序号:001</div>
-                <div><label>船舶登记号：</label> <input type="text" name="number" id="number" required="required"/></div>
-                <div><label>中文船名：</label><input type="text" name="chinese_name" id="chinese-name" required="required"/></div>
-                <div><label>英文船名：</label> <input type="text" name="english_name" id="english-name" required="required"/></div>
-                <div><label>船舶呼号：</label> <input type="text" name="call_sign"  id="call-sign" required="required"/></div>
-                <div><label>船舶种类：</label> <input type="text" name="ship_kind"  id="ship-kind" required="required"/></div>
-                <div><label>船旗国：</label> <input type="text" name="ship_flag"  id="ship-flag" required="required"/></div>
-                <div><label>船舶拥有者：</label><input type="text" name="ship_owner" id="ship-owner" required="required"/></div>
-                <div><label>船籍港：</label><input type="text" name="ship_port"  id="ship-port" required="required"/></div>
+                <div><label>船舶登记号：</label> <input type="text" name="Official_Number" id="number" required="required" placeholder="必须为9位数字"/></div>
+                <div><label>中文船名：</label><input type="text" name="Chinese_Name" id="chinese-name" required="required"/></div>
+                <div><label>英文船名：</label> <input type="text" name="English_Name" id="english-name" required="required"/></div>
+                <div><label>船舶呼号：</label> <input type="text" name="Call_Sign"  id="call-sign" required="required"  placeholder="必须为4位大写字母"/></div>
+                <div><label>船舶种类：</label> <input type="text" name="Type"  id="ship-kind" required="required"/></div>
+                <div><label>船旗国：</label> <input type="text" name="Flag"  id="ship-flag" required="required"/></div>
+                <div><label>船舶拥有者：</label><input type="text" name="Owner" id="ship-owner" required="required"/></div>
+                <div><label>船籍港：</label><input type="text" name="Port_Registry"  id="ship-port" required="required"/></div>
+                <input type="hidden" name= "LONG" id="long"/>
+                <input type="hidden" name= "LAT" id="lat"/>
             </form>
-            <!--<button id="cancel" class="btn" onclick="cancelShipSubmit()">取消</button>-->
             <input type="submit" value="登录" id="addShipSubmit"  class="btn"  OnClick="addShipSubmit()"/>
         </div>
     </div>

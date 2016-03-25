@@ -173,7 +173,7 @@ a{
 }
 
 .add-ship {
-    width: 582px;
+    width: 555px;
     height: 532px;
     position: absolute;
     left: 50%;
@@ -187,7 +187,7 @@ a{
 #popup-top {
     height: 35px;
     line-height: 35px;
-    margin-bottom: 10px;
+    margin-bottom: 24px;
     color: #1170b4;
     font-weight: 700;
     font-size: 18px;
@@ -197,7 +197,7 @@ a{
 .btnclose{
     background: url("../image/close.png") no-repeat;
     position:absolute;
-    right:5%;
+    right:1%;
     top:1%;
     display: inline-block;
     height: 22px;
@@ -210,7 +210,7 @@ a{
 .add-ship div {
     color: #1170b4;
     font-size: 16px;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
     text-indent: 16px;
 }
 .add-ship div label {
@@ -218,14 +218,14 @@ a{
     width: 113px;
     height: 30px;
     line-height: 30px;
-    margin-left: 70px;
+    margin-left: 65px;
 }
-.add-ship div input{
+.add-ship div input {
     font-size: 16px;
-    width:220px;
+    width: 220px;
     height: 30px;
     line-height: normal;
-    padding:0;
+    padding: 0;
     border: solid 1px #ccc;
 }
 #addShipSubmit {
@@ -241,10 +241,15 @@ a{
 #addShipSubmit :hover{
     background: #0072E3;
 }
-.error{
-    font-size: 14px;
+.error {
+    display: inline-block;
+    width: 128px;
+    height: 16px;
+    font-size: 13px;
     color: orangered;
+    background: url("../image/error.png") no-repeat;
 }
+
 .drawtype{
     margin-left: 20px;
     margin-top: 8px;
@@ -254,22 +259,31 @@ a{
     font-size: 14px;
 }
 #measure-popup{
-    width: 300px;
-    height: 150px;
+    width: 200px;
+    height: 100px;
     position: absolute;
     left: 16%;
-    background-color:#f8f8f8;
-    border: solid 1px #ccc;
+    background: url("../image/measure.png") no-repeat;
     display: none;
     overflow: auto;
 }
-#measure-popup-top{
+#measure-popup-top {
+    height: 30px;
+    line-height: 30px;
     cursor: move;
+    color: #1170B4;
+    text-indent: 1em;
+    border-bottom: 1px solid #ccc;
+    /* vertical-align: middle; */
 }
 #measure-popup .btnclose{
     right: 0;
     top: 3%;
     cursor: pointer;
+}
+#measureOutput{
+    color: #1170B4;
+    text-indent: 10px;
 }
 
 /*地图上一些工具*/
@@ -294,7 +308,7 @@ a{
 }
 #location{
     position: absolute;
-    bottom: 0px;
+    bottom: 0;
     right: 10%;
     font-weight: bold;
     z-index: 99;

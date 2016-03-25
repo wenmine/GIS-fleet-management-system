@@ -25,6 +25,18 @@ function setOn(name, count) {
         if (count == (i + 1)) {
             menu.className = "on";
             document.getElementById("left-nav" + i).style.display = "block";
+            if(count != 2){
+                if(document.getElementById("add-ship").style.display !="none"){
+                    document.getElementById("add-ship").style.display ="none";
+                    clearForm();
+                }
+            }
+            if(count != 3){
+                if(document.getElementById("measure-popup").style.display !="none"){
+                    document.getElementById("measure-popup").style.display ="none";
+                    document.getElementById("measureOutput").innerHTML ="";
+                }
+            }
         } else {
             menu.className = "";
             menu.className = "out";

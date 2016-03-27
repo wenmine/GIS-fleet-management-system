@@ -4,3 +4,22 @@
 3.报警区域
 4.标注popup样式
 5.添加船队popup可拖拽
+
+3/26更新
+/ 返回单个feature对象
+var feature = ol.format.GeoJSON.readFeature(data),用data这个geoJson数据转化成它的feature，可用在将船队添加显示到地图上
+// 将feature添加到source
+vectorSource.addFeature(feature);
+
+
+得到geometry对象
+var geometry = feature.getGeometry();（var coord = event.feature.getGeometry().getCoordinates();可以获取坐标）
+转换坐标
+coord = ol.proj.transform(coord, 'EPSG:3857', 'EPSG:4326');
+var lon = coord[0];
+var lat = coord[1];
+
+//把feature读到geoJson中，可以获得标注的geojson
+var format = new ol.format.GeoJSON();
+format.writeFeature(feature);
+1.标注点/线/面在数据库中的存储，由于（线、面存储会包含数量不确定点，因为是动态的标注（可以拐弯的线），而数据库的记录空间无法留足（太浪费！））

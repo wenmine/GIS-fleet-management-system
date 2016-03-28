@@ -6,6 +6,7 @@ var map = null;
 var source = null;
 var fleet_source = null;
 var range_source = null;
+var iconStyle = null;
 window.onload = function () {
     var format = 'image/png';
     var bounds = [73.4510046356223, 18.1632471876417,
@@ -56,7 +57,7 @@ window.onload = function () {
         source: baidu_source
     });
     //创建标注图层的样式
-    var iconStyle = new ol.style.Style({
+    iconStyle = new ol.style.Style({
         fill: new ol.style.Fill({
             color: 'rgba(255,255,255,0.2)'
         }),
@@ -69,10 +70,10 @@ window.onload = function () {
             anchorXUnits: 'fraction',
             anchorYUnits: 'pixels',
             opacity: 0.75,
-            src: 'http://openlayers.org/en/v3.9.0/examples/data/icon.png'
+            src: '../image/marker-icon.png'
         })),
         text: new ol.style.Text({
-            text: "Wow such label",
+            text: "未命名标注",
             offsetY: 0,
             textAlign: 'left',
             fill: new ol.style.Fill({
@@ -84,7 +85,6 @@ window.onload = function () {
             })
         })
     });
-
     //临时标注图层的数据源
     source = new ol.source.Vector();
     //新建临时标注图层，并设置临时图层渲染各种要素的样式

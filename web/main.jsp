@@ -122,7 +122,7 @@
                 <input type="hidden" name="LONG" id="long"/>
                 <input type="hidden" name="LAT" id="lat"/>
             </form>
-            <input type="submit" value="登录" id="addShipSubmit" class="btn" OnClick="addShipSubmit()"/>
+            <input type="submit" value="提交" id="addShipSubmit" class="btn" OnClick="addShipSubmit()"/>
         </div>
     </div>
     <div id="measure-popup" class="measure-popup">
@@ -132,9 +132,23 @@
         </div>
         <p id="measureOutput"></p>
     </div>
+    <div id="mark-popup" >
+        <div id="mark-popup-top" class="popup-top">
+            标注
+            <span class="btnclose" onclick="markClose(this)"></span>
+        </div>
+        <div class="mark-content">
+            <form method="post">
+                <label>名称:</label><input type="text" name="Mark_Name" id="mark-name" required="required" value="未命名标注">
+                <input type="button" value="保存" id="mark-name-save">
+            </form>
+        </div>
+    </div>
 </div>
 <script src="http://openlayers.org/en/v3.13.1/build/ol-debug.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/map.js"></script>
+<script type="text/javascript" src="js/markmap.js"></script>
+<script type="text/javascript" src="js/fleetmap.js"></script>
 <script src="js/drag.js"></script>
 </body>
 </html>

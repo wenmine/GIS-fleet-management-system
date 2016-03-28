@@ -57,8 +57,8 @@ var getCheckObject = function () {
 var checkObj = getCheckObject();
 
 //每次打开对话框时将里面的表单原先的值清空
-function clearForm() {
-    var objId = document.getElementById("add-ship-form");
+function clearForm(obj) {
+    var objId = document.getElementById(obj);
     if (objId == undefined) {
         return;
     }
@@ -144,8 +144,9 @@ function wOpen() {
 }
 function wClose(that) {
     that.parentNode.parentNode.style.display = "none";
-    clearForm();
+    clearForm("add-ship-form");
 }
+
 function addShipToBox(tt) {
     var shipNum = $("#number");
     var chineseName = $("#chinese-name");
@@ -229,7 +230,7 @@ $(".del").click(function (event) {
             Official_Number: id
         },
         success: function (data) {
-            window.location.reload();
+            //window.location.reload();
         },
         error: function (data) {
             alert(data);
@@ -309,7 +310,7 @@ function addShipSubmit() {
         data: $("#add-ship-form").serialize(),
         success: function (data) {
             alert("提交成功！");
-            window.location.reload();
+            //window.location.reload();
         },
         error: function (data) {
             alert("error");
@@ -317,5 +318,5 @@ function addShipSubmit() {
     });
     $("#add-ship").hide();
     addShipInfoToList();
-    clearForm();
+    clearForm("add-ship-form");
 }

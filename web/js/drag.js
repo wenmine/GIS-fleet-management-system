@@ -14,12 +14,15 @@ function getByClass (clsName,parent) {
     }
     return eles;
 }
-var oTitle = getByClass('popup-top','measure-popup')[0];
-oTitle.onmousedown = fnDown;
+var oAddShipTitle = getByClass('popup-top','add-ship')[0];
+oAddShipTitle.onmousedown = fnDown;
+var oMeasureTitle = getByClass('popup-top','measure-popup')[0];
+oMeasureTitle.onmousedown = fnDown;
+var oMarkTitle = getByClass('popup-top','mark-popup')[0];
+oMarkTitle.onmousedown = fnDown;
 function fnDown (event) {
-    console.log("1");
     event = event || window.event;
-    var oDrag = document.getElementById('measure-popup');
+    var oDrag = this.parentNode;
     //disX和disY是光标按下时光标与面板间的距离，
     //通过光标在在整个页面的距离减去面板在整个页面的距离获得
     var disX = event.clientX-oDrag.offsetLeft;
@@ -28,7 +31,7 @@ function fnDown (event) {
     document.onmousemove = function  (event) {
 
         event = event || window.event;
-        fnMove(event,disX,disY);
+        fnMove(event,disX,disY,oDrag);
     };
 
     //释放鼠标
@@ -38,8 +41,8 @@ function fnDown (event) {
     }
 }
 
-function fnMove (e,posX,posY) {
-    var oDrag = document.getElementById('measure-popup');
+function fnMove (e,posX,posY,oDrag) {
+    //var oDrag = document.getElementById('measure-popup');
     var l = e.clientX-posX,
         t = e.clientY-posY,
         winW = document.documentElement.clientWidth || document.body.clientWidth,

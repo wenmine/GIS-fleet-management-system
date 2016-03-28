@@ -44,6 +44,14 @@ function setMarkUnFlod(ulname, name, count) {
         }
     }
 }
+
+function markClose(that) {
+    that.parentNode.parentNode.style.display = "none";
+    document.getElementById("#mark-name").value = "未命名标注";
+    if(draw1!= null){
+        map.addInteraction(draw1);
+    }
+}
 /*实现标注与测距功能*/
 function init(ulname, name, count) {
     /*标注开始*/
@@ -56,8 +64,26 @@ function init(ulname, name, count) {
                 source: source,//设置要素源，绘制结束后将绘制的要素添加到临时图层
                 type: (value)//绘制的类型
             });
+            var count = 0;
             map.addInteraction(draw1);
             draw1.on('drawend', function (evt) {
+                //map.removeInteraction(draw1);
+                count+=1;
+                var markPopup =document.getElementById("mark-popup");
+                markPopup.style.display = "block";
+                $("#mark-name-save").click(function(){
+                   var markName =document.getElementById("mark-name");
+                    if(markName.value !=""){
+                        iconStyle.text_.setText(markName.value);
+                        evt.feature.setStyle(iconStyle);
+                        markPopup.style.display = "none";
+                        markName.value = "未命名标注";
+                        //map.addInteraction(draw1);
+                    }
+                    window.temp = evt.feature;
+                    console.log(evt.feature);
+                    console.log(count);
+                });
                 //console.log(evt.feature);
                 //var format = new ol.format.GeoJSON();
                 //format.writeFeature(evt.feature);
@@ -65,7 +91,6 @@ function init(ulname, name, count) {
                 //console.log(coord);
                 //var feature = new ol.Feature(new ol.geom.Point([12053737.17543087, 4402772.829226152]));
                 //source.addFeature(feature);
-                window.temp = evt.feature;
             });
         }
     }
@@ -110,16 +135,16 @@ function init(ulname, name, count) {
             sketchElement = document.getElementById('measureOutput');
         });
         draw2.on('drawend', function (evt) {
-            //console.log(evt.feature);
-            var format = new ol.format.GeoJSON();
-            format.writeFeature(evt.feature);
-            var coord = evt.feature.getGeometry().getCoordinates();
-            console.log(coord);
-            var feature = new ol.Feature(new ol.geom.Point([12053737.17543087, 4402772.829226152]));
-            source.addFeature(feature);
-            //console.log(format);
-            //window.feature = evt.feature;
-            //window.temp = format;
+            ////console.log(evt.feature);
+            //var format = new ol.format.GeoJSON();
+            //format.writeFeature(evt.feature);
+            //var coord = evt.feature.getGeometry().getCoordinates();
+            //console.log(coord);
+            //var feature = new ol.Feature(new ol.geom.Point([12053737.17543087, 4402772.829226152]));
+            //source.addFeature(feature);
+            ////console.log(format);
+            ////window.feature = evt.feature;
+            ////window.temp = format;
             sketch = null;
         });
     }

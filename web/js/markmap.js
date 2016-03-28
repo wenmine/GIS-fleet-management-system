@@ -3,6 +3,7 @@
  */
 /* 当前绘制的要素*/
 var sketch;
+var markFeature;
 /**
  * 当前绘制要素的元素
  */
@@ -52,6 +53,17 @@ function markClose(that) {
         map.addInteraction(draw1);
     }
 }
+var markPopup =document.getElementById("mark-popup");
+var markName =null;
+$("#mark-name-save").click(function(){
+    markName =document.getElementById("mark-name");
+    if(markName.value !=""){
+        markPopup.style.display = "none";
+        iconStyle.text_.setText(markName.value);
+        markFeature.setStyle(iconStyle);
+        //map.addInteraction(draw1);
+    }
+});
 /*实现标注与测距功能*/
 function init(ulname, name, count) {
     /*标注开始*/
@@ -66,24 +78,22 @@ function init(ulname, name, count) {
             });
             var count = 0;
             map.addInteraction(draw1);
+            draw1.on('drawstart', function (evt) {
+                markFeature = evt.feature;
+            });
             draw1.on('drawend', function (evt) {
                 //map.removeInteraction(draw1);
                 count+=1;
-                var markPopup =document.getElementById("mark-popup");
                 markPopup.style.display = "block";
-                $("#mark-name-save").click(function(){
-                   var markName =document.getElementById("mark-name");
-                    if(markName.value !=""){
-                        iconStyle.text_.setText(markName.value);
-                        evt.feature.setStyle(iconStyle);
-                        markPopup.style.display = "none";
-                        markName.value = "未命名标注";
+                    if(markName&&markName.value !=""){
+
                         //map.addInteraction(draw1);
                     }
-                    window.temp = evt.feature;
-                    console.log(evt.feature);
-                    console.log(count);
-                });
+                markFeature = null;
+                    // window.temp = evt.feature;
+                    // console.log(evt.feature);
+                    // console.log(count);
+
                 //console.log(evt.feature);
                 //var format = new ol.format.GeoJSON();
                 //format.writeFeature(evt.feature);
@@ -130,7 +140,6 @@ function init(ulname, name, count) {
             map.addInteraction(draw2);
         }
         draw2.on('drawstart', function (evt) {
-
             sketch = evt.feature;
             sketchElement = document.getElementById('measureOutput');
         });

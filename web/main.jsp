@@ -149,6 +149,18 @@
             </form>
         </div>
     </div>
+    <div id="warn-popup" >
+        <div id="warn-popup-top" class="popup-top">
+            报警区域名称
+            <span class="btnclose" onclick="warnClose(this)"></span>
+        </div>
+        <div class="warn-content">
+            <form method="post">
+                <label>名称:</label><input type="text" name="Warn_Name" id="warn-name" required="required" value="未命名">
+                <input type="button" value="保存" id="warn-name-save">
+            </form>
+        </div>
+    </div>
 </div>
 <script src="js/ol-debug.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/map.js"></script>

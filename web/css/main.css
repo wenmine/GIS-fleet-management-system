@@ -338,6 +338,58 @@ a{
 #mark-name-save:hover{
     background: #0072E3;
 }
+/*报警*/
+#warn-popup{
+    width: 241px;
+    height: 121px;
+    position: absolute;
+    left: 16%;
+    background: url("../image/markbg.png") no-repeat;
+    overflow: auto;
+    display: none;
+}
+#warn-popup-top {
+    height: 30px;
+    line-height: 30px;
+    cursor: move;
+    color: #1170B4;
+    text-indent: 1em;
+    border-bottom: 1px solid #ccc;
+    /* vertical-align: middle; */
+}
+#warn-popup .btnclose{
+    right: 0;
+    top: 3%;
+    cursor: pointer;
+}
+#warn-popup .warn-content {
+    margin-top: 16px;
+    text-indent: 5px;
+}
+#warn-popup .mark-content label{
+    font-size: 14px;
+    color: #1170B4;
+}
+.warn-content input {
+    height: 22px;
+    line-height: 22px;
+    width: 180px;
+}
+#warn-name-save {
+    border: none;
+    height: 30px;
+    line-height: 30px;
+    color: #fff;
+    background: #1170B4;
+    width: 130px;
+    font-size: 15px;
+    margin-top: 15px;
+    margin-left: 54px;
+    border-radius: 5px;
+}
+#warn-name-save:hover{
+    background: #0072E3;
+}
 /*地图上一些工具*/
 #switch{
     position:absolute;

@@ -150,7 +150,7 @@ window.onload = function () {
         controls: ol.control.defaults({
             attribution: false
         }).extend(controls),
-        interactions: ol.interaction.defaults().extend([
+        interactions: ol.interaction.defaults({doubleClickZoom :false}).extend([
             new ol.interaction.DragRotateAndZoom()
         ]),
         target: 'map',
@@ -161,5 +161,6 @@ window.onload = function () {
         })
     });
     // map.getView().fitExtent(bounds, map.getSize());
+
 
 };

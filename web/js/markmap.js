@@ -8,6 +8,8 @@ var warnFeature;
 var markDraw = null;//定义全局变量，当绘图方式改变时删除当前的绘制工具
 var measureDraw = null;
 var warnDraw = null;
+var markFeatureID = 0;
+var warnFeatureID = 0;
 /**
  * 当前绘制要素的元素
  */
@@ -53,13 +55,26 @@ function setMarkUnFlod(ulname, name, count) {
 
 function markClose(that) {
     that.parentNode.parentNode.style.display = "none";
-    document.getElementById("#mark-name").value = "未命名标注";
-    //if(markDraw!= null){
-    //    map.addInteraction(markDraw);
-    //}
+    document.getElementById("mark-name").value = "未命名标注";
+    if (markFeature) {
+        source.removeFeature(markFeature);
+    }
+    if (markDraw != null) {
+        map.addInteraction(markDraw);
+    }
 }
 
-var markName =null;
+function warnClose(that) {
+    that.parentNode.parentNode.style.display = "none";
+    document.getElementById("warn-name").value = "未命名";
+    if (warnFeature) {
+        warnSource.removeFeature(warnFeature);
+    }
+    if (warnDraw != null) {
+        map.addInteraction(warnDraw);
+    }
+}
+var markName = null;
 /*实现标注与测距功能*/
 function init(ulname, name, count) {
     /*标注开始*/
@@ -67,7 +82,6 @@ function init(ulname, name, count) {
     //初始化绘图工具
     function addInteraction() {
         var value = typeSelected.value;
-        ol.interaction.defaults({doubleClickZoom:false});
         if (value !== 'None') {
             markDraw = new ol.interaction.Draw({
                 source: source,//设置要素源，绘制结束后将绘制的要素添加到临时图层
@@ -75,13 +89,17 @@ function init(ulname, name, count) {
             });
             map.addInteraction(markDraw);
             markDraw.on('drawend', function (evt) {
+                var markPopup = document.getElementById("mark-popup");
+                var markNameSave = document.getElementById("mark-name-save");
+                markFeatureID = markFeatureID + 1;
                 markFeature = evt.feature;
-                var markPopup =document.getElementById("mark-popup");
+                markFeature.setId(markFeatureID);
+                console.log(markFeature.getId());
                 markPopup.style.display = "block";
-               //console.log( map.removeInteraction(markDraw));
-                $("#mark-name-save").click(function(){
-                    markName =document.getElementById("mark-name");
-                    if(markName.value !=""){
+                map.removeInteraction(markDraw);
+                markNameSave.onclick = function () {
+                    markName = document.getElementById("mark-name");
+                    if (markName.value != "") {
                         markPopup.style.display = "none";
                         var markStyle = new ol.style.Style({
                             fill: new ol.style.Fill({
@@ -112,9 +130,10 @@ function init(ulname, name, count) {
                             })
                         });
                         markFeature.setStyle(markStyle);
-                        //map.addInteraction(markDraw);
+                        map.addInteraction(markDraw);
+                        document.getElementById("mark-name").value = "未命名标注";
                     }
-                });
+                };
 
 
                 //console.log(evt.feature);
@@ -161,6 +180,7 @@ function init(ulname, name, count) {
 
             });
             map.addInteraction(measureDraw);
+
         }
         measureDraw.on('drawstart', function (evt) {
             sketch = evt.feature;
@@ -210,8 +230,9 @@ function init(ulname, name, count) {
 
     setMarkUnFlod(ulname, name, count);
 }
-function warnInit(ulname, name, count){
+function warnInit(ulname, name, count) {
     var warnType = document.getElementById('warntype');
+
     function addInteraction3() {
         var value = warnType.value;
         if (value !== 'None') {
@@ -221,14 +242,18 @@ function warnInit(ulname, name, count){
             });
             map.addInteraction(warnDraw);
             warnDraw.on('drawend', function (evt) {
+                var warnPopup = document.getElementById("warn-popup");
+                var warnNameSave = document.getElementById("warn-name-save");
+                warnFeatureID = warnFeatureID + 1;
                 warnFeature = evt.feature;
-                var markPopup =document.getElementById("mark-popup");
-                markPopup.style.display = "block";
-                //console.log( map.removeInteraction(markDraw));
-                $("#mark-name-save").click(function(){
-                    markName =document.getElementById("mark-name");
-                    if(markName.value !=""){
-                        markPopup.style.display = "none";
+                warnFeature.setId(warnFeatureID);
+                console.log(warnFeature.getId());
+                warnPopup.style.display = "block";
+                map.removeInteraction(warnDraw);
+                warnNameSave.onclick = function () {
+                    warnName = document.getElementById("warn-name");
+                    if (warnName.value != "") {
+                        warnPopup.style.display = "none";
                         var warnStyle = new ol.style.Style({
                             fill: new ol.style.Fill({
                                 color: 'rgba(255,255,255,0.2)'
@@ -245,7 +270,7 @@ function warnInit(ulname, name, count){
                                 src: '../image/marker-icon.png'
                             })),
                             text: new ol.style.Text({
-                                text: markName.value,
+                                text: warnName.value,
                                 offsetY: 0,
                                 textAlign: 'left',
                                 fill: new ol.style.Fill({
@@ -258,9 +283,10 @@ function warnInit(ulname, name, count){
                             })
                         });
                         warnFeature.setStyle(warnStyle);
-                        //map.addInteraction(warnDraw);
+                        map.addInteraction(warnDraw);
+                        document.getElementById("warn-name").value = "未命名";
                     }
-                });
+                };
             });
         }
     }

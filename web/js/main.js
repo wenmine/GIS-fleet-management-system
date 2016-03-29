@@ -26,29 +26,48 @@ function setOn(name, count) {
         if (count == (i + 1)) {
             menu.className = "on";
             document.getElementById("left-nav" + i).style.display = "block";
-            if(count != 2){
-                if(document.getElementById("add-ship").style.display !="none"){
-                    document.getElementById("add-ship").style.display ="none";
+            if (count != 2) {
+                if (document.getElementById("add-ship").style.display != "none") {
+                    document.getElementById("add-ship").style.display = "none";
                     clearForm();
                 }
-            }else{
+            } else {
                 document.getElementById("left-nav" + 0).style.display = "blcok";
-            }
-            if(count != 3){
-                if(document.getElementById("measure-popup").style.display !="none"){
-                    document.getElementById("measure-popup").style.display ="none";
-                    document.getElementById("measureOutput").innerHTML ="";
-                }
             }
         } else {
             menu.className = "";
             menu.className = "out";
-            if ( 0 == i && count == 2) {
+            if (0 == i && count == 2) {
                 document.getElementById("left-nav" + i).style.display = "block";
-            }else{
+            } else {
                 document.getElementById("left-nav" + i).style.display = "none";
             }
         }
+    }
+    if (map && measureDraw) {
+        map.removeInteraction(measureDraw);
+        measureDraw = null;
+    }
+    if (map && warnDraw) {
+        map.removeInteraction(warnDraw);
+        warnDraw = null;
+    }
+    if (map && markDraw) {
+        map.removeInteraction(markDraw);
+        markDraw = null;
+    }
+    check();
+    if (document.getElementById("measure-popup").style.display != "none") {
+        document.getElementById("measure-popup").style.display = "none";
+        document.getElementById("measureOutput").innerHTML = "";
+    }
+    if (document.getElementById("mark-popup").style.display != "none") {
+        document.getElementById("mark-popup").style.display = "none";
+        document.getElementById("mark-name").value = "未命名标注";
+    }
+    if (document.getElementById("warn-popup").style.display != "none") {
+        document.getElementById("warn-popup").style.display = "none";
+        document.getElementById("warn-name").value = "未命名";
     }
 }
 

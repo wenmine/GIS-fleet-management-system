@@ -20,6 +20,8 @@ var oMeasureTitle = getByClass('popup-top','measure-popup')[0];
 oMeasureTitle.onmousedown = fnDown;
 var oMarkTitle = getByClass('popup-top','mark-popup')[0];
 oMarkTitle.onmousedown = fnDown;
+var oWarnTitle = getByClass('popup-top','warn-popup')[0];
+oWarnTitle.onmousedown = fnDown;
 function fnDown (event) {
     event = event || window.event;
     var oDrag = this.parentNode;

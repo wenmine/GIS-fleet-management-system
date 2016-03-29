@@ -1,12 +1,13 @@
 var projection = ol.proj.get("EPSG:3857");//指定了地图切片使用的坐标系
 var resolutions = [];
-var draw1 = null;//定义全局变量，当绘图方式改变时删除当前的绘制工具
-var draw2 = null;
+
 var map = null;
 var source = null;
 var fleet_source = null;
 var range_source = null;
 var iconStyle = null;
+var warnStyle = null;
+var warnSource = null;
 window.onload = function () {
     var format = 'image/png';
     var bounds = [73.4510046356223, 18.1632471876417,
@@ -118,12 +119,32 @@ window.onload = function () {
         source: fleet_source,
         style: fleetStyle
     });
+
+    /*测距相关*/
     //临时测距图层的数据源
     range_source = new ol.source.Vector();
     //新建临时测距图层，并设置临时图层渲染各种要素的样式
     var range_vector = new ol.layer.Vector({
         source: range_source,
         style: new ol.style.Style()
+    });
+
+    //创建报警区域图层的样式
+    warnStyle = new ol.style.Style({
+        fill: new ol.style.Fill({
+            color: 'rgba(255,255,255,0.2)'
+        }),
+        stroke: new ol.style.Stroke({
+            color: '#0c95f8',
+            width: 2
+        })
+    });
+    //临时标注图层的数据源
+    warnSource = new ol.source.Vector();
+    //新建临时标注图层，并设置临时图层渲染各种要素的样式
+    var warn_vector = new ol.layer.Vector({
+        source: warnSource,
+        style: warnStyle
     });
     map = new ol.Map({
         controls: ol.control.defaults({
@@ -133,7 +154,7 @@ window.onload = function () {
             new ol.interaction.DragRotateAndZoom()
         ]),
         target: 'map',
-        layers: [baidu_layer, vector, range_vector, fleet_vector],
+        layers: [baidu_layer, vector, range_vector, fleet_vector,warn_vector],
         view: new ol.View({
             center: [12959773, 4853101],//设置地图中心
             zoom: 5 //初始的缩放等级

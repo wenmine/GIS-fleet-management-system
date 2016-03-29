@@ -4,6 +4,10 @@
 /* 当前绘制的要素*/
 var sketch;
 var markFeature;
+var warnFeature;
+var markDraw = null;//定义全局变量，当绘图方式改变时删除当前的绘制工具
+var measureDraw = null;
+var warnDraw = null;
 /**
  * 当前绘制要素的元素
  */
@@ -12,7 +16,7 @@ var sketchElement;
 function setMarkUnFlod(ulname, name, count) {
     var links = document.getElementById(ulname).getElementsByTagName('li');
     var measurePopup = document.getElementById("measure-popup");
-    measurePopup.style.display = "block";
+    //measurePopup.style.display = "block";
     for (var i = 0; i < links.length; i++) {
         var menu = document.getElementById("submenu-" + name + (i + 1));
         if (count == (i + 1) && menu) {
@@ -36,8 +40,9 @@ function setMarkUnFlod(ulname, name, count) {
                     }
                 }
             }
-            map.removeInteraction(draw1);
-            map.removeInteraction(draw2);
+            map.removeInteraction(markDraw);
+            map.removeInteraction(measureDraw);
+            map.removeInteraction(warnDraw);
         } else if (menu) {
             menu.style.display = "none";
             measurePopup.style.display = "none";
@@ -49,21 +54,12 @@ function setMarkUnFlod(ulname, name, count) {
 function markClose(that) {
     that.parentNode.parentNode.style.display = "none";
     document.getElementById("#mark-name").value = "未命名标注";
-    if(draw1!= null){
-        map.addInteraction(draw1);
-    }
+    //if(markDraw!= null){
+    //    map.addInteraction(markDraw);
+    //}
 }
-var markPopup =document.getElementById("mark-popup");
+
 var markName =null;
-$("#mark-name-save").click(function(){
-    markName =document.getElementById("mark-name");
-    if(markName.value !=""){
-        markPopup.style.display = "none";
-        iconStyle.text_.setText(markName.value);
-        markFeature.setStyle(iconStyle);
-        //map.addInteraction(draw1);
-    }
-});
 /*实现标注与测距功能*/
 function init(ulname, name, count) {
     /*标注开始*/
@@ -71,28 +67,55 @@ function init(ulname, name, count) {
     //初始化绘图工具
     function addInteraction() {
         var value = typeSelected.value;
+        ol.interaction.defaults({doubleClickZoom:false});
         if (value !== 'None') {
-            draw1 = new ol.interaction.Draw({
+            markDraw = new ol.interaction.Draw({
                 source: source,//设置要素源，绘制结束后将绘制的要素添加到临时图层
                 type: (value)//绘制的类型
             });
-            var count = 0;
-            map.addInteraction(draw1);
-            draw1.on('drawstart', function (evt) {
+            map.addInteraction(markDraw);
+            markDraw.on('drawend', function (evt) {
                 markFeature = evt.feature;
-            });
-            draw1.on('drawend', function (evt) {
-                //map.removeInteraction(draw1);
-                count+=1;
+                var markPopup =document.getElementById("mark-popup");
                 markPopup.style.display = "block";
-                    if(markName&&markName.value !=""){
-
-                        //map.addInteraction(draw1);
+               //console.log( map.removeInteraction(markDraw));
+                $("#mark-name-save").click(function(){
+                    markName =document.getElementById("mark-name");
+                    if(markName.value !=""){
+                        markPopup.style.display = "none";
+                        var markStyle = new ol.style.Style({
+                            fill: new ol.style.Fill({
+                                color: 'rgba(255,255,255,0.2)'
+                            }),
+                            stroke: new ol.style.Stroke({
+                                color: '#0c95f8',
+                                width: 2
+                            }),
+                            image: new ol.style.Icon(({
+                                anchor: [0.5, 46],
+                                anchorXUnits: 'fraction',
+                                anchorYUnits: 'pixels',
+                                opacity: 0.75,
+                                src: '../image/marker-icon.png'
+                            })),
+                            text: new ol.style.Text({
+                                text: markName.value,
+                                offsetY: 0,
+                                textAlign: 'left',
+                                fill: new ol.style.Fill({
+                                    color: 'rgba(255,255,255,0.2)'
+                                }),
+                                stroke: new ol.style.Stroke({
+                                    color: '#ff0000',
+                                    width: 1
+                                })
+                            })
+                        });
+                        markFeature.setStyle(markStyle);
+                        //map.addInteraction(markDraw);
                     }
-                markFeature = null;
-                    // window.temp = evt.feature;
-                    // console.log(evt.feature);
-                    // console.log(count);
+                });
+
 
                 //console.log(evt.feature);
                 //var format = new ol.format.GeoJSON();
@@ -107,7 +130,7 @@ function init(ulname, name, count) {
 
     //绘制方式改变后重新初始化绘图工具
     typeSelected.onchange = function (e) {
-        map.removeInteraction(draw1);
+        map.removeInteraction(markDraw);
         addInteraction();
     };
     /*测距开始*/
@@ -132,18 +155,18 @@ function init(ulname, name, count) {
     function addInteraction2(map, typeSelect, source) {
         var type = typeSelect.value == 'area' ? 'Polygon' : 'LineString';
         if (typeSelect.value !== 'None') {
-            draw2 = new ol.interaction.Draw({
+            measureDraw = new ol.interaction.Draw({
                 source: range_source,
                 type: (type)
 
             });
-            map.addInteraction(draw2);
+            map.addInteraction(measureDraw);
         }
-        draw2.on('drawstart', function (evt) {
+        measureDraw.on('drawstart', function (evt) {
             sketch = evt.feature;
             sketchElement = document.getElementById('measureOutput');
         });
-        draw2.on('drawend', function (evt) {
+        measureDraw.on('drawend', function (evt) {
             ////console.log(evt.feature);
             //var format = new ol.format.GeoJSON();
             //format.writeFeature(evt.feature);
@@ -159,7 +182,7 @@ function init(ulname, name, count) {
     }
 
     testType.onchange = function (e) {
-        map.removeInteraction(draw2);
+        map.removeInteraction(measureDraw);
         addInteraction2(map, testType, source);
     };
     var formateLength = function (line) {
@@ -185,6 +208,67 @@ function init(ulname, name, count) {
         return output;
     };
 
+    setMarkUnFlod(ulname, name, count);
+}
+function warnInit(ulname, name, count){
+    var warnType = document.getElementById('warntype');
+    function addInteraction3() {
+        var value = warnType.value;
+        if (value !== 'None') {
+            warnDraw = new ol.interaction.Draw({
+                source: warnSource,//设置要素源，绘制结束后将绘制的要素添加到临时图层
+                type: (value)//绘制的类型
+            });
+            map.addInteraction(warnDraw);
+            warnDraw.on('drawend', function (evt) {
+                warnFeature = evt.feature;
+                var markPopup =document.getElementById("mark-popup");
+                markPopup.style.display = "block";
+                //console.log( map.removeInteraction(markDraw));
+                $("#mark-name-save").click(function(){
+                    markName =document.getElementById("mark-name");
+                    if(markName.value !=""){
+                        markPopup.style.display = "none";
+                        var warnStyle = new ol.style.Style({
+                            fill: new ol.style.Fill({
+                                color: 'rgba(255,255,255,0.2)'
+                            }),
+                            stroke: new ol.style.Stroke({
+                                color: '#0c95f8',
+                                width: 2
+                            }),
+                            image: new ol.style.Icon(({
+                                anchor: [0.5, 46],
+                                anchorXUnits: 'fraction',
+                                anchorYUnits: 'pixels',
+                                opacity: 0.75,
+                                src: '../image/marker-icon.png'
+                            })),
+                            text: new ol.style.Text({
+                                text: markName.value,
+                                offsetY: 0,
+                                textAlign: 'left',
+                                fill: new ol.style.Fill({
+                                    color: 'rgba(255,255,255,0.2)'
+                                }),
+                                stroke: new ol.style.Stroke({
+                                    color: '#ff0000',
+                                    width: 1
+                                })
+                            })
+                        });
+                        warnFeature.setStyle(warnStyle);
+                        //map.addInteraction(warnDraw);
+                    }
+                });
+            });
+        }
+    }
+
+    warnType.onchange = function (e) {
+        map.removeInteraction(warnDraw);
+        addInteraction3();
+    };
     setMarkUnFlod(ulname, name, count);
 }
 

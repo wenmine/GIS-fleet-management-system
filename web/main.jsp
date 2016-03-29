@@ -10,7 +10,7 @@
 <head>
     <title>Title</title>
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="http://openlayers.org/en/v3.13.1/css/ol.css" type="text/css">
+    <link rel="stylesheet" href="css/ol.css" type="text/css">
     <script src="js/jquery-1.12.1.min.js"></script>
     <script src="js/main.js"></script>
     <script src="js/fleet.js"></script>
@@ -34,9 +34,9 @@
 <div class="content" id="con-one-1">
     <div id="left-menu" class="left-menu">
         <ul id="left-nav0" class="left-nav1">
-            <li id="left-one1" class="list-title-up" onclick="setUnflod('left-nav0','one',1)"><a><span
+            <li id="left-one1" class="list-title-down" onclick="setUnflod('left-nav0','one',1)"><a><span
                     class="icon"></span>我的船队</a>
-                <ul id="submenu-one1" class="left-one-submenu">
+                <ul id="submenu-one1" class="left-one-submenu" style="display: block">
                     <li onclick="stopEvent(event)"><a>暂无船队</a><span class="edit"></span><span class="del"></span></li>
                     <%--<c:forEach items="${paginate.dataList}" var="record">--%>
                         <%--<li data-id="${record.get("Official_Number")}" onclick="stopEvent(event)">--%>
@@ -44,18 +44,6 @@
                                                                          <%--data-id="${record.get("Official_Number")}"></span><span--%>
                                 <%--class="del" data-id="${record.get("Official_Number")}"></span></li>--%>
                     <%--</c:forEach>--%>
-                </ul>
-            </li>
-            <li id="left-one2" class="list-title-up" onclick="setUnflod('left-nav0','one',2)"><a><span
-                    class="icon"></span>到港提醒</a>
-                <ul id="submenu-one2" class="left-one-submenu">
-                    <li onclick="stopEvent(event)"><a>未设置到港提醒</a><span></span><span></span></li>
-                </ul>
-            </li>
-            <li id="left-one3" class="list-title-up" onclick="setUnflod('left-nav0','one',3)"><a><span
-                    class="icon"></span>区域提醒</a>
-                <ul id="submenu-one3" class="left-one-submenu">
-                    <li onclick="stopEvent(event)"><a>未设置区域提醒</a><span></span><span></span></li>
                 </ul>
             </li>
         </ul>
@@ -75,7 +63,17 @@
                     </select>
                 </ul>
             </li>
-            <li id="left-three2" class="list-title-up"><a><span class="icon"></span>删除标注</a></li>
+            <li id="left-three2" onclick="init('left-nav2','three',2)" class="list-title-up"><a><span class="icon"></span>标绘信息管理</a>
+                <ul id="submenu-three2" class="left-one-submenu" >
+                    <li onclick="stopEvent(event)"><a>暂无标注</a><span class="edit"></span><span class="del"></span></li>
+                    <%--<c:forEach items="${paginate.dataList}" var="record">--%>
+                    <%--<li data-id="${record.get("Official_Number")}" onclick="stopEvent(event)">--%>
+                    <%--<a>${record.get("Official_Number")}</a><span class="edit"--%>
+                    <%--data-id="${record.get("Official_Number")}"></span><span--%>
+                    <%--class="del" data-id="${record.get("Official_Number")}"></span></li>--%>
+                    <%--</c:forEach>--%>
+                </ul>
+            </li>
             <li id="left-three3" onclick="init('left-nav2','three',3)" class="list-title-up"><a><span
                     class="icon"></span>测距</a>
                 <ul id="submenu-three3" class="left-one-submenu" onclick="stopEvent(event)">
@@ -86,11 +84,18 @@
                     </select>
                 </ul>
             </li>
-            <li id="left-three4" class="list-title-up"><a><span class="icon"></span>标绘信息管理</a></li>
         </ul>
         <ul id="left-nav3" class="left-nav1 left-nav2">
-            <li id="left-four1" class="list-title-up"><a><span class="icon"></span>设置报警区域</a></li>
+            <li id="left-four1" class="list-title-up" onclick="warnInit('left-nav3','four',1)"><a><span class="icon"></span>设置报警区域</a>
+                <ul id="submenu-four1" class="left-one-submenu" onclick="stopEvent(event)">
+                    <select id="warntype" class="drawtype" onclick="stopEvent(event)">
+                        <option value="None" selected="selected">None</option>
+                        <option value="Polygon">设置区域面</option>
+                    </select>
+                </ul>
+            </li>
             <li id="left-four2" class="list-title-up"><a><span class="icon"></span>报警区域管理</a></li>
+            <li id="left-four3" class="list-title-up"><a><span class="icon"></span>区域提醒</a></li>
         </ul>
 
     </div>
@@ -145,7 +150,7 @@
         </div>
     </div>
 </div>
-<script src="http://openlayers.org/en/v3.13.1/build/ol-debug.js" type="text/javascript"></script>
+<script src="js/ol-debug.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/map.js"></script>
 <script type="text/javascript" src="js/markmap.js"></script>
 <script type="text/javascript" src="js/fleetmap.js"></script>

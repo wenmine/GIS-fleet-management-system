@@ -4,6 +4,7 @@
 function check() {
     document.getElementById("drawtype").value = "None";
     document.getElementById("testtype").value = "None";
+    document.getElementById("warntype").value = "None";
 }
 //        window.onload = function(){
 function stopEvent(event) { //阻止冒泡事件
@@ -30,6 +31,8 @@ function setOn(name, count) {
                     document.getElementById("add-ship").style.display ="none";
                     clearForm();
                 }
+            }else{
+                document.getElementById("left-nav" + 0).style.display = "blcok";
             }
             if(count != 3){
                 if(document.getElementById("measure-popup").style.display !="none"){
@@ -40,7 +43,9 @@ function setOn(name, count) {
         } else {
             menu.className = "";
             menu.className = "out";
-            if ( 0 != i ) {
+            if ( 0 == i && count == 2) {
+                document.getElementById("left-nav" + i).style.display = "block";
+            }else{
                 document.getElementById("left-nav" + i).style.display = "none";
             }
         }

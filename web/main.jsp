@@ -37,7 +37,7 @@
             <li id="left-one1" class="list-title-down" onclick="setUnflod('left-nav0','one',1)"><a><span
                     class="icon"></span>我的船队</a>
                 <ul id="submenu-one1" class="left-one-submenu" style="display: block">
-                    <li onclick="stopEvent(event)"><a>暂无船队</a><span class="edit"></span><span class="del"></span></li>
+                    <li onclick="stopEvent(event)"><a>暂无船队</a>
                     <%--<c:forEach items="${paginate.dataList}" var="record">--%>
                         <%--<li data-id="${record.get("Official_Number")}" onclick="stopEvent(event)">--%>
                             <%--<a>${record.get("Official_Number")}</a><span class="edit"--%>
@@ -49,7 +49,6 @@
         </ul>
         <ul id="left-nav1" class="left-nav1 left-nav2">
             <li id="left-two1" onclick="wOpen()" class="list-title-up"><a><span class="icon"></span>添加船舶</a></li>
-            <li id="left-two2" class="list-title-up"><a><span class="icon"></span>删除船舶</a></li>
         </ul>
         <ul id="left-nav2" class="left-nav1 left-nav2">
             <li id="left-three1" onclick="init('left-nav2','three',1)" class="list-title-up"><a><span
@@ -72,9 +71,11 @@
                     <%--data-id="${record.get("Official_Number")}"></span><span--%>
                     <%--class="del" data-id="${record.get("Official_Number")}"></span></li>--%>
                     <%--</c:forEach>--%>
+                    <input type="hidden" name="LONG" class="fleet-long"/>
+                    <input type="hidden" name="LAT" class="fleet-lat"/>
                 </ul>
             </li>
-            <li id="left-three3" onclick="init('left-nav2','three',3)" class="list-title-up"><a><span
+            <li id="left-three3" onclick="measureInit('left-nav2','three',3)" class="list-title-up"><a><span
                     class="icon"></span>测距</a>
                 <ul id="submenu-three3" class="left-one-submenu" onclick="stopEvent(event)">
                     <select id="testtype" class="drawtype" onclick="stopEvent(event)">
@@ -122,8 +123,7 @@
                 <div><label>船舶种类：</label> <input type="text" name="Type" id="ship-kind" required="required"/></div>
                 <div><label>船旗国：</label> <input type="text" name="Flag" id="ship-flag" required="required"/></div>
                 <div><label>船舶拥有者：</label><input type="text" name="Owner" id="ship-owner" required="required"/></div>
-                <div><label>船籍港：</label><input type="text" name="Port_Registry" id="ship-port" required="required"/>
-                </div>
+                <div><label>船籍港：</label><input type="text" name="Port_Registry" id="ship-port" required="required"/></div>
                 <input type="hidden" name="LONG" id="long"/>
                 <input type="hidden" name="LAT" id="lat"/>
             </form>
@@ -162,9 +162,11 @@
         </div>
     </div>
 </div>
-<script src="js/ol-debug.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/ol-debug.js"></script>
 <script type="text/javascript" src="js/map.js"></script>
 <script type="text/javascript" src="js/markmap.js"></script>
+<script type="text/javascript" src="js/measuremap.js"></script>
+<script type="text/javascript" src="js/warnmap.js"></script>
 <script type="text/javascript" src="js/fleetmap.js"></script>
 <script src="js/drag.js"></script>
 </body>

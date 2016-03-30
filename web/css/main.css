@@ -176,13 +176,10 @@ a{
     width: 555px;
     height: 532px;
     position: absolute;
-    left: 50%;
-    margin-left: -240px;
-    margin-top: 5px;
+    left: 35%;
+    top:5px;
     display: none;
-    /*background-color: #fff;*/
      background: url("../image/addship-bg.png") no-repeat;
-    /*border: solid 1px #ccc;*/
 }
 #popup-top {
     height: 35px;
@@ -193,6 +190,7 @@ a{
     font-size: 18px;
     border-bottom: solid 1px #ccc;
     text-indent: 16px;
+    cursor: move;
 }
 .btnclose{
     background: url("../image/close.png") no-repeat;

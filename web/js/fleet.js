@@ -269,35 +269,6 @@ function addShipSubmitCheck() {
     }
     return (nullFlag && numFlag && callFlag);
 }
-//class ShipInfo {
-//    constructor(number, chinese_name, english_name, call_sign,
-//                ship_kind, ship_flag, ship_owner, ship_port) {
-//        this.number = number;
-//        this.chinese_name = chinese_name;
-//        this.english_name = english_name;
-//        this.call_sign = call_sign;
-//        this.ship_kind = ship_kind;
-//        this.ship_flag = ship_flag;
-//        this.ship_owner = ship_owner;
-//        this.ship_port = ship_port;
-//    }
-//}
-//var shipMap = new Map();
-//function createShipObj() {
-//    var shipNumValue = document.getElementById("number").value;
-//    var chineseNameValue = document.getElementById("chinese-name").value;
-//    var englishNameValue = document.getElementById("english-name").value;
-//    var callSignValue = document.getElementById("call-sign").value;
-//    var shipKindValue = document.getElementById("ship-kind").value;
-//    var shipFlagValue = document.getElementById("ship-flag").value;
-//    var shipOwnerValue = document.getElementById("ship-owner").value;
-//    var shipPortValue = document.getElementById("ship-port").value;
-//    var shipObj = new ShipInfo(shipNumValue, chineseNameValue, englishNameValue, callSignValue,
-//        shipKindValue, shipFlagValue, shipOwnerValue, shipPortValue);
-//    shipMap.set(shipNumValue, shipObj);
-//}
-//删除
-//删除
 
 //验证后提交到数据库中
 function addShipSubmit() {
@@ -305,6 +276,7 @@ function addShipSubmit() {
         return;
     }
     $.ajax({
+
         type: "post",
         url: basePath + "manage/modify",
         data: $("#add-ship-form").serialize(),

@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="css/ol.css" type="text/css">
     <script src="js/jquery-1.12.1.min.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/fleet.js"></script>
 </head>
 <body onbeforeunload="check()">
 <div id="header" class="header">
@@ -163,6 +162,7 @@
     </div>
 </div>
 <script type="text/javascript" src="js/ol-debug.js"></script>
+<script src="js/fleet.js"></script>
 <script type="text/javascript" src="js/map.js"></script>
 <script type="text/javascript" src="js/markmap.js"></script>
 <script type="text/javascript" src="js/measuremap.js"></script>

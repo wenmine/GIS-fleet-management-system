@@ -160,16 +160,7 @@ window.onload = function () {
             zoom: 5 //初始的缩放等级
         })
     });
-    // map.getView().fitExtent(bounds, map.getSize());
-    //var fleetDraw = null;
-    //
-    //function FleetAddInteraction() {
-    //    fleetDraw = new ol.interaction.Draw({
-    //        source: fleet_source,//设置要素源，绘制结束后将绘制的要素添加到临时图层
-    //        type: "point"//绘制的类型
-    //    });
-    //    map.addInteraction(fleetDraw);
-    //}
+
     var data = {
         "type": "Feature",
         "geometry": {"type": "Point", "coordinates": [11492230.765647963, 5072972.693230578]},
@@ -180,6 +171,5 @@ window.onload = function () {
     //var feature = format.readFeature(data);
     console.log(feature);
     fleet_source.addFeature(feature);
-    //FleetAddInteraction();
 
 };

@@ -21,27 +21,21 @@ function stopEvent(event) { //阻止冒泡事件
 
 function setOn(name, count) {
     var links = document.getElementById("tab1").getElementsByTagName('li');
-    for (var i = 0; i < links.length; i++) {
-        var menu = document.getElementById(name + (i + 1));
-        if (count == (i + 1)) {
+    for (var i = 1; i <= links.length; i++) {
+        var menu = document.getElementById(name + i);
+        if (count == i) {
             menu.className = "on";
             document.getElementById("left-nav" + i).style.display = "block";
-            if (count != 2) {
+            if (count != 1) {
                 if (document.getElementById("add-ship").style.display != "none") {
                     document.getElementById("add-ship").style.display = "none";
                     clearForm();
                 }
-            } else {
-                document.getElementById("left-nav" + 0).style.display = "blcok";
             }
         } else {
             menu.className = "";
             menu.className = "out";
-            if (0 == i && count == 2) {
-                document.getElementById("left-nav" + i).style.display = "block";
-            } else {
-                document.getElementById("left-nav" + i).style.display = "none";
-            }
+            document.getElementById("left-nav" + i).style.display = "none";
         }
     }
     if (map && measureDraw) {

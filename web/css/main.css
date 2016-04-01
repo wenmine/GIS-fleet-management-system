@@ -30,7 +30,7 @@ a{
     list-style: none;
     margin-top:15px ;
     text-align:center;
-    margin-left: 500px;
+    margin-left: 800px;
 }
 .header-nav li{
     float: left;
@@ -218,6 +218,11 @@ a{
     line-height: 30px;
     margin-left: 65px;
 }
+#ship-warn{
+    font-size: 11px;
+    color: orangered;
+    margin-left: 178px;
+}
 .add-ship div input {
     font-size: 16px;
     width: 220px;
@@ -227,6 +232,7 @@ a{
     border: solid 1px #ccc;
 }
 #addShipSubmit {
+    display: block;
     margin-left: 85px;
     width: 333px;
     height: 40px;
@@ -237,6 +243,20 @@ a{
     cursor: pointer;
 }
 #addShipSubmit :hover{
+    background: #0072E3;
+}
+#close-see {
+    display: none;
+    margin-left: 85px;
+    width: 333px;
+    height: 40px;
+    border: none;
+    background: #1170b4;
+    color: #ffffff;
+    font-size: 18px;
+    cursor: pointer;
+}
+#close-see :hover{
     background: #0072E3;
 }
 .error {

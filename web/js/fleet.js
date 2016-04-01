@@ -9,7 +9,9 @@ var getCheckObject = function () {
     var tipCall = document.createElement("span");
     tipCall.className = "error";
     tipCall.appendChild(document.createTextNode("必须为4位大写字母"));
-
+    var tipEnglishName = document.createElement("span");
+    tipEnglishName.className = "error";
+    tipEnglishName.appendChild(document.createTextNode("格式错误！"));
     function addErrorTip(node, name) {
 
         if (name === "Official_Number") {
@@ -18,6 +20,8 @@ var getCheckObject = function () {
             node.parentNode.appendChild(tipCall);
         } else if (name === "LONG" || name === "LAT") {
 
+        } else if (name === "English_Name") {
+            node.parentNode.appendChild(tipEnglishName);
         } else {
             if (node.parentNode.lastChild.className === "error") {
                 return;
@@ -43,15 +47,22 @@ var getCheckObject = function () {
 
     function isValidCall(callvalue) {
         var reg = new RegExp("^[A-Z]{4}$");
-        var hasEnouthDigital = reg.test(callvalue);
-        return hasEnouthDigital;
+        var hasEnouthUpper = reg.test(callvalue);
+        return hasEnouthUpper;
+    }
+
+    function isValidEnglishName(englishnamevalue) {
+        var reg = new RegExp("^[a-zA-Z 0-9]+$");
+        var hasOnlyLetter = reg.test(englishnamevalue);
+        return hasOnlyLetter;
     }
 
     return {
         addErrorTip: addErrorTip,
         removeErrorTip: removeErrorTip,
         isValidNum: isValidNum,
-        isValidCall: isValidCall
+        isValidCall: isValidCall,
+        isValidEnglishName: isValidEnglishName
     };
 };
 var checkObj = getCheckObject();
@@ -103,6 +114,7 @@ function iterateInputAddFocusListener() {
     var i = 0;
     var shipNum = document.getElementById("number");
     var shipCall = document.getElementById("call-sign");
+    var EnglishName = document.getElementById("english-name");
     shipNum.onblur = function () {
         if (!checkObj.isValidNum(shipNum.value)) {
             checkObj.addErrorTip(shipNum, 'Official_Number');
@@ -119,10 +131,19 @@ function iterateInputAddFocusListener() {
     shipCall.onfocus = function () {
         checkObj.removeErrorTip(shipCall);
     };
+    EnglishName.onblur = function () {
+        if (!checkObj.isValidEnglishName(EnglishName.value)) {
+            checkObj.addErrorTip(EnglishName, 'English_Name');
+        }
+    };
+    EnglishName.onfocus = function () {
+        checkObj.removeErrorTip(EnglishName);
+    };
+
     for (i = 0; i < inputList.length; i++) {
         checkObj.removeErrorTip(inputList[i]);
         if (inputList[i].name === "Official_Number" ||
-            inputList[i].name === "Call_Sign" || inputList[i].name == "LONG" || inputList[i].name == "LAT") {
+            inputList[i].name === "Call_Sign" || inputList[i].name == "LONG" || inputList[i].name == "LAT" || inputList[i].name == "English_Name") {
             continue;
         } else {
             inputList[i].onfocus = function () {
@@ -138,15 +159,26 @@ function iterateInputAddFocusListener() {
     }
 }
 
-function wOpen() {
-    document.getElementById("add-ship").style.display = "block";
-    iterateInputAddFocusListener();
-}
+//function wOpen() {
+//    if(document.getElementById("add-ship").style.display == "block"){
+//        clearForm();
+//    }else{
+//        document.getElementById("add-ship").style.display = "block";
+//    }
+//    iterateInputAddFocusListener();
+//}
 function wClose(that) {
     that.parentNode.parentNode.style.display = "none";
     clearForm("add-ship-form");
 }
-
+function wSeeClose(that) {
+    document.getElementById("add-ship").style.display = "none";
+    if (document.getElementById("addShipSubmit").style.display == "none") {
+        document.getElementById("addShipSubmit").style.display = "block";
+    }
+    document.getElementById("close-see").style.display = "none";
+    clearForm("add-ship-form");
+}
 function addShipToBox(tt) {
     var shipNum = $("#number");
     var chineseName = $("#chinese-name");
@@ -171,74 +203,114 @@ function addShipToBox(tt) {
     shiplat.val(json.LAT);
 }
 
-$('#submenu-one1 li').click(function (event) {
-    var me = $(this);
-    var id = me.attr("data-id");
-    $("#id").val(id);
-    $.ajax({
-        url: basePath + "manage/detail",
-        type: 'get',
-        data: {
-            Official_Number: id
-        },
-        dataType: 'json',
-        timeout: 1000,
-        cache: false,
-        error: erryFunction,  //错误执行方法
-        success: addShipToBox //成功执行方法
-    });
-    function erryFunction() {
-        alert("error");
+function updateShipList(data) {
+    var list = "";
+    if (data.length <= 0) {
+        list = "<li onclick='stopEvent(event)' class='ship-none'><a>暂无船队</a></li>"
+    } else {
+        $.each(data, function (index, element) {
+            list += "<li  class=‘fleetInfo’ data-id=" + element.Official_Number + " onclick='stopEvent(event)'>";
+            list += "<a>" + element.Official_Number + "</a>";
+            list += "<span class='edit' data-id=" + element.Official_Number + "></span>";
+            list += "<span class='del' data-id=" + element.Official_Number + "></span>";
+            list += "<input type='hidden' name='LONG' class='fleet-long' value=" + element.LONG + " />";
+            list += "<input type='hidden' name='LAT' class='fleet-lat' value=" + element.LAT + " />";
+            list += "</li>";
+        });
     }
+    $("#submenu-one1").html(list);
+    shipListOperate();
+}
 
-    $('#add-ship-form input').attr("readonly", "readonly");
+$("#left-one2").click(function (event) {
+    $("#popup-top").html("添加船舶" + " <span id='btnclose' class='btnclose' onclick='wClose(this)'></span>");
+    document.getElementById("ship-warn").style.display = "block";
+    document.getElementById("ship-warn").innerHTML = "登记号为唯一值，不可修改,请谨慎填写!";
+    clearForm("add-ship-form");
     $("#add-ship").show();
+    iterateInputAddFocusListener();
     stopEvent(event);
 });
-
-$(".edit").click(function (event) {
-    var me = $(this);
-    var id = me.attr("data-id");
-    $("#id").val(id);
-    $.ajax({
-        url: basePath + "manage/detail",
-        type: 'get',
-        data: {
-            Official_Number: id
-        },
-        dataType: 'json',
-        timeout: 1000,
-        cache: false,
-        error: erryFunction,  //错误执行方法
-        success: addShipToBox //成功执行方法
-    });
-    function erryFunction() {
-        alert("error");
-    }
-
-    $("#add-ship").show();
-    stopEvent(event);
-});
-/*删除*/
-$(".del").click(function (event) {
-    var me = $(this);
-    var id = me.attr("data-id");
-    $.ajax({
-        type: "post",
-        url: basePath + "manage/delete",
-        data: {
-            Official_Number: id
-        },
-        success: function (data) {
-            //window.location.reload();
-        },
-        error: function (data) {
-            alert(data);
+function shipListOperate() {
+    $('#submenu-one1 li:not(.ship-none)').dblclick(function (event) {
+        document.getElementById("ship-warn").style.display = "none";
+        document.getElementById("addShipSubmit").style.display = "none";
+        document.getElementById("close-see").style.display = "block";
+        stopEvent(event);
+        var me = $(this);
+        var id = me.attr("data-id");
+        $("#id").val(id);
+        $.ajax({
+            url: basePath + "/editajax",
+            type: 'post',
+            data: {
+                Official_Number: id
+            },
+            dataType: 'json',
+            timeout: 1000,
+            cache: false,
+            error: erryFunction,  //错误执行方法
+            success: addShipToBox //成功执行方法
+        });
+        function erryFunction() {
+            alert("error");
         }
-    });
-    stopEvent(event);
-});
 
+        $('#add-ship-form input').attr("readonly", "readonly");
+        $("#add-ship").show();
+
+    });
+
+    $(".edit").click(function (event) {
+        $("#popup-top").html("修改船舶" + " <span id='btnclose' class='btnclose' onclick='wClose(this)'></span>");
+        document.getElementById("ship-warn").style.display = "block";
+        document.getElementById("ship-warn").innerHTML = "登记号为唯一值，不可修改!";
+        var me = $(this);
+        var id = me.attr("data-id");
+        $("#id").val(id);
+        $.ajax({
+            url: basePath + "/editajax",
+            contentType: "application/x-www-form-urlencoded; charset=GBK",
+            type: 'post',
+            data: {
+                Official_Number: id
+            },
+            dataType: 'json',
+            timeout: 1000,
+            cache: false,
+            error: erryFunction,  //错误执行方法
+            success: addShipToBox //成功执行方法
+        });
+        function erryFunction() {
+            alert("error");
+        }
+
+        $("#add-ship").show();
+        $("#number").attr("readonly", "readonly");
+        stopEvent(event);
+    });
+    /*删除*/
+    $(".del").click(function (event) {
+        stopEvent(event);
+        var me = $(this);
+        var id = me.attr("data-id");
+        console.log("delete");
+        $.ajax({
+            type: "post",
+            url: basePath + "/delajax",
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded; charset=GBK",
+            data: {
+                Official_Number: id
+            },
+            success: updateShipList,
+            error: function (data) {
+                alert(data);
+            }
+        });
+    });
+}
+shipListOperate();
 //提交时表单验证
 function addShipSubmitCheck() {
     var addShip = document.getElementById("add-ship");
@@ -276,19 +348,23 @@ function addShipSubmit() {
         return;
     }
     $.ajax({
-
         type: "post",
-        url: basePath + "manage/modify",
+        url: basePath + "/addajax",
+        contentType: "application/x-www-form-urlencoded; charset=GBK",
         data: $("#add-ship-form").serialize(),
-        success: function (data) {
-            alert("提交成功！");
-            //window.location.reload();
-        },
+        dataType: "json",
+        success: updateShipList,
         error: function (data) {
             alert("error");
         }
     });
     $("#add-ship").hide();
-    addShipInfoToList();
+    //addShipInfoToList();
     clearForm("add-ship-form");
 }
+$(document).ready(function () {
+    $(".fleetInfo").each(function (index) {
+        var This = $(this);
+        console.log(This.find("input").first().html());
+    })
+});

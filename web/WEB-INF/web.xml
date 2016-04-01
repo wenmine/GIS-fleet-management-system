@@ -3,4 +3,45 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>LoginServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddDataServlet</servlet-name>
+        <servlet-class>AddDataServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EditDataServlet</servlet-name>
+        <servlet-class>EditDataServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DelDataServlet</servlet-name>
+        <servlet-class>DelDataServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ReadDataServlet</servlet-name>
+        <servlet-class>ReadDataServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddDataServlet</servlet-name>
+        <url-pattern>/addajax</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditDataServlet</servlet-name>
+        <url-pattern>/editajax</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DelDataServlet</servlet-name>
+        <url-pattern>/delajax</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReadDataServlet</servlet-name>
+        <url-pattern>/json</url-pattern>
+    </servlet-mapping>
 </web-app>

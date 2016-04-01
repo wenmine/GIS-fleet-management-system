@@ -17,6 +17,7 @@ var sketchElement;
 function setMarkUnFlod(ulname, name, count) {
     var links = document.getElementById(ulname).getElementsByTagName('li');
     var measurePopup = document.getElementById("measure-popup");
+    var markPopup = document.getElementById("mark-popup");
     //measurePopup.style.display = "block";
     for (var i = 0; i < links.length; i++) {
         var menu = document.getElementById("submenu-" + name + (i + 1));
@@ -30,7 +31,6 @@ function setMarkUnFlod(ulname, name, count) {
                         sketchElement.innerHTML = "";
                     }
                 }
-                check();
             } else if (menu.style.display == "none" || menu.style.display == "") {
                 menu.style.display = "block";
                 menu.parentNode.className = "list-title-down";
@@ -41,15 +41,23 @@ function setMarkUnFlod(ulname, name, count) {
                     }
                 }
             }
-            map.removeInteraction(markDraw);
-            map.removeInteraction(measureDraw);
-            map.removeInteraction(warnDraw);
+            if (count != 1) {
+                if (markPopup.style.display == "block") {
+                    markPopup.style.display = "none";
+                    document.getElementById("mark-name").value = "未命名标注";
+                    map.removeInteraction(markDraw);
+                }
+            }
         } else if (menu) {
             menu.style.display = "none";
             measurePopup.style.display = "none";
 
         }
     }
+    check();
+    map.removeInteraction(markDraw);
+    map.removeInteraction(measureDraw);
+    map.removeInteraction(warnDraw);
 }
 
 function markClose(that) {

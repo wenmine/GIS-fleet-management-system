@@ -159,14 +159,16 @@ function iterateInputAddFocusListener() {
     }
 }
 
-//function wOpen() {
-//    if(document.getElementById("add-ship").style.display == "block"){
-//        clearForm();
-//    }else{
-//        document.getElementById("add-ship").style.display = "block";
-//    }
-//    iterateInputAddFocusListener();
-//}
+function iterateInputRemoveErrorTip() {
+    var addShip = document.getElementById("add-ship");
+    var inputList = addShip.getElementsByTagName('input');
+    var i;
+    for (i = 0; i < inputList.length; i++) {
+        checkObj.removeErrorTip(inputList[i]);
+    }
+
+}
+
 function wClose(that) {
     that.parentNode.parentNode.style.display = "none";
     clearForm("add-ship-form");
@@ -206,17 +208,23 @@ function addShipToBox(tt) {
 function updateShipList(data) {
     var list = "";
     if (data.length <= 0) {
-        list = "<li onclick='stopEvent(event)' class='ship-none'><a>暂无船队</a></li>"
+        $("#add-ship").hide();
+        clearForm("add-ship-form");
+        list = "<li onclick='stopEvent(event)'><a  class='ship-none'>暂无船队</a></li>";
+        clearFleet();
     } else {
         $.each(data, function (index, element) {
             list += "<li  class=‘fleetInfo’ data-id=" + element.Official_Number + " onclick='stopEvent(event)'>";
-            list += "<a>" + element.Official_Number + "</a>";
-            list += "<span class='edit' data-id=" + element.Official_Number + "></span>";
-            list += "<span class='del' data-id=" + element.Official_Number + "></span>";
+            list += "<a  data-id=" + element.Official_Number + ">" + element.Official_Number + "</a>";
+            list += "<span class='fleet-edit edit' data-id=" + element.Official_Number + "></span>";
+            list += "<span class='fleet-del del' data-id=" + element.Official_Number + "></span>";
             list += "<input type='hidden' name='LONG' class='fleet-long' value=" + element.LONG + " />";
             list += "<input type='hidden' name='LAT' class='fleet-lat' value=" + element.LAT + " />";
             list += "</li>";
+            clearFleet();
+            drawFleet(element.Official_Number,element.LONG,element.LAT);
         });
+
     }
     $("#submenu-one1").html(list);
     shipListOperate();
@@ -226,13 +234,17 @@ $("#left-one2").click(function (event) {
     $("#popup-top").html("添加船舶" + " <span id='btnclose' class='btnclose' onclick='wClose(this)'></span>");
     document.getElementById("ship-warn").style.display = "block";
     document.getElementById("ship-warn").innerHTML = "登记号为唯一值，不可修改,请谨慎填写!";
+    document.getElementById("addShipSubmit").style.display = "block";
+    document.getElementById("close-see").style.display = "none";
     clearForm("add-ship-form");
     $("#add-ship").show();
     iterateInputAddFocusListener();
     stopEvent(event);
 });
 function shipListOperate() {
-    $('#submenu-one1 li:not(.ship-none)').dblclick(function (event) {
+    $('#submenu-one1 li a:not(.ship-none)').dblclick(function (event) {
+        iterateInputRemoveErrorTip();
+        $("#popup-top").html("查看船舶" + " <span id='btnclose' class='btnclose' onclick='wClose(this)'></span>");
         document.getElementById("ship-warn").style.display = "none";
         document.getElementById("addShipSubmit").style.display = "none";
         document.getElementById("close-see").style.display = "block";
@@ -261,10 +273,14 @@ function shipListOperate() {
 
     });
 
-    $(".edit").click(function (event) {
+    $(".fleet-edit").click(function (event) {
+        iterateInputAddFocusListener();
         $("#popup-top").html("修改船舶" + " <span id='btnclose' class='btnclose' onclick='wClose(this)'></span>");
         document.getElementById("ship-warn").style.display = "block";
         document.getElementById("ship-warn").innerHTML = "登记号为唯一值，不可修改!";
+        document.getElementById("addShipSubmit").style.display = "block";
+        document.getElementById("close-see").style.display = "none";
+        $('#add-ship-form input').removeAttr("readonly");
         var me = $(this);
         var id = me.attr("data-id");
         $("#id").val(id);
@@ -290,7 +306,7 @@ function shipListOperate() {
         stopEvent(event);
     });
     /*删除*/
-    $(".del").click(function (event) {
+    $(".fleet-del").click(function (event) {
         stopEvent(event);
         var me = $(this);
         var id = me.attr("data-id");
@@ -362,9 +378,19 @@ function addShipSubmit() {
     //addShipInfoToList();
     clearForm("add-ship-form");
 }
-$(document).ready(function () {
-    $(".fleetInfo").each(function (index) {
-        var This = $(this);
-        console.log(This.find("input").first().html());
-    })
-});
+//定时刷新
+// function refresh() {
+//     $.ajax({
+//         type: "post",
+//         url: basePath + "/addajax",
+//         contentType: "application/x-www-form-urlencoded; charset=GBK",
+//         data: $("#add-ship-form").serialize(),
+//         dataType: "json",
+//         success: updateShipList,
+//         error: function (data) {
+//             alert("error");
+//         }
+//     });
+//     setTimeOut("refresh()",5000);
+// }
+// setTimeOut("refresh()",5000);

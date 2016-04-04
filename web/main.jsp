@@ -1,7 +1,7 @@
-<%@ page import="com.test.com.test.EditData" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="com.test.com.test.EditData" %>
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
@@ -53,17 +53,17 @@
                     <%
                         if (list == null || list.isEmpty()) {
                     %>
-                    <li onclick="stopEvent(event)" class="ship-none"><a>暂无船队</a></li>
+                    <li onclick="stopEvent(event)"><a class="ship-none">暂无船队</a></li>
                     <%
                     } else {
                         for (Map<String, Object> stringObjectMap : list) {
                     %>
                     <li class="fleetInfo" data-id="<%=stringObjectMap.get("Official_Number")%>"
                         onclick="stopEvent(event)">
-                        <a><%=stringObjectMap.get("Official_Number")%>
+                        <a data-id="<%=stringObjectMap.get("Official_Number")%>"><%=stringObjectMap.get("Official_Number")%>
                         </a>
-                        <span class="edit" data-id="<%=stringObjectMap.get("Official_Number")%>"></span>
-                        <span class="del" data-id="<%=stringObjectMap.get("Official_Number")%>"></span>
+                        <span class="fleet-edit edit" data-id="<%=stringObjectMap.get("Official_Number")%>"></span>
+                        <span class="fleet-del del" data-id="<%=stringObjectMap.get("Official_Number")%>"></span>
                         <input type="hidden" name="LONG" class="fleet-long" value="<%=stringObjectMap.get("LONG")%>"/>
                         <input type="hidden" name="LAT" class="fleet-lat" value="<%=stringObjectMap.get("LAT")%>"/>
                     </li>
@@ -90,14 +90,26 @@
             </li>
             <li id="left-two2" onclick="init('left-nav2','two',2)" class="list-title-up"><a><span class="icon"></span>标绘信息管理</a>
                 <ul id="submenu-two2" class="left-one-submenu">
-                    <li onclick="stopEvent(event)"><a>暂无标注</a><span class="edit"></span><span class="del"></span>
+                            <%--<%--%>
+                        <%--if (list == null || list.isEmpty()) {--%>
+                    <%--%>--%>
+                    <%--<li onclick="stopEvent(event)"><a class="mark-none">暂无标注</a></li>--%>
+                    <%--<%--%>
+                    <%--} else {--%>
+                        <%--for (Map<String, Object> stringObjectMap : list) {--%>
+                    <%--%>--%>
+                    <%--<li class="markInfo" data-id="<%=stringObjectMap.get("Official_Number") data-type="" data-name="" data-coord=""%>"--%>
+                        <%--onclick="stopEvent(event)">--%>
+                        <%--<a data-id="<%=stringObjectMap.get("Official_Number")%>"><%=stringObjectMap.get("Official_Number")%>--%>
+                        <%--</a>--%>
+                        <%--<span class="mark-edit edit" data-id="<%=stringObjectMap.get("Official_Number")%>"></span>--%>
+                        <%--<span class="mark-del del" data-id="<%=stringObjectMap.get("Official_Number")%>"></span>--%>
+                    <%--</li>--%>
+                    <%--<%--%>
+                            <%--}--%>
+                        <%--}--%>
 
-                        <%--<c:forEach items="${paginate.dataList}" var="record">--%>
-                        <%--<li data-id="${record.get("Official_Number")}" onclick="stopEvent(event)">--%>
-                        <%--<a>${record.get("Official_Number")}</a><span class="edit"--%>
-                        <%--data-id="${record.get("Official_Number")}"></span><span--%>
-                        <%--class="del" data-id="${record.get("Official_Number")}"></span></li>--%>
-                        <%--</c:forEach>--%>
+                    <%--%>--%>
                 </ul>
             </li>
             <li id="left-two3" onclick="measureInit('left-nav2','two',3)" class="list-title-up"><a><span
@@ -194,12 +206,12 @@
     </div>
 </div>
 <script type="text/javascript" src="js/ol-debug.js"></script>
-<script src="js/fleet.js"></script>
 <script type="text/javascript" src="js/map.js"></script>
+<script type="text/javascript" src="js/fleetmap.js"></script>
+<script src="js/fleet.js"></script>
 <script type="text/javascript" src="js/markmap.js"></script>
 <script type="text/javascript" src="js/measuremap.js"></script>
 <script type="text/javascript" src="js/warnmap.js"></script>
-<script type="text/javascript" src="js/fleetmap.js"></script>
 <script src="js/drag.js"></script>
 </body>
 </html>

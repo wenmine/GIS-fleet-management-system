@@ -147,7 +147,7 @@ a{
     width: 16px;
     height: 16px;
     background: url("../image/edit.png") no-repeat;
-    margin-left: 25px;
+    margin-left: 10px;
     vertical-align: middle;
     cursor: pointer;
 }
@@ -156,7 +156,7 @@ a{
     width: 16px;
     height: 16px;
     background: url("../image/del.png") no-repeat;
-    margin-left: 15px;
+    margin-left: 5px;
     vertical-align: middle;
     cursor: pointer;
 }

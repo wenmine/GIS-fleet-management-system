@@ -8,7 +8,6 @@ var markDraw = null;//定义全局变量，当绘图方式改变时删除当前�
 var warnDraw = null;
 /*测距*/
 var measureDraw = null;
-var markFeatureID = 0;
 /**
  * 当前绘制要素的元素
  */
@@ -59,7 +58,6 @@ function setMarkUnFlod(ulname, name, count) {
     map.removeInteraction(measureDraw);
     map.removeInteraction(warnDraw);
 }
-
 function markClose(that) {
     that.parentNode.parentNode.style.display = "none";
     document.getElementById("mark-name").value = "未命名标注";
@@ -70,7 +68,157 @@ function markClose(that) {
         map.addInteraction(markDraw);
     }
 }
+function drawMark(markId, name, type, coord) {
+    var data = {
+        "type": "Feature",
+        "geometry": {"type": type, "coordinates": coord}
+    };
+    var feature = ol.format.GeoJSON.readFeature(data);
+    feature.setId(id);
+    var markStyle = new ol.style.Style({
+        fill: new ol.style.Fill({
+            color: 'rgba(255,255,255,0.2)'
+        }),
+        stroke: new ol.style.Stroke({
+            color: '#0c95f8',
+            width: 2
+        }),
+        image: new ol.style.Icon(({
+            anchor: [0.5, 46],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'pixels',
+            opacity: 0.75,
+            src: '../image/marker-icon.png'
+        })),
+        text: new ol.style.Text({
+            text: name,
+            offsetY: 0,
+            textAlign: 'left',
+            fill: new ol.style.Fill({
+                color: 'rgba(255,255,255,0.2)'
+            }),
+            stroke: new ol.style.Stroke({
+                color: '#ff0000',
+                width: 1
+            })
+        })
+    });
+    feature.setStyle(markStyle);
+    source.addFeature(feature);
+}
+(function () {
+    $(".markInfo").each(function (index) {
+        var This = $(this);
+        var markId = This.attr("data-id");
+        var markName = This.attr("data-name");
+        var marktype = This.attr("data-type");
+        var coord = This.attr("data-coord");
 
+        console.log(long + "," + lat);
+        drawMark(markId, markName, marktype, coord);
+    });
+})();
+
+
+function seeMarkCenter(data) {
+    var json = eval(data); //数组
+    if (data.Mark_Type == "Point") {
+        map.getView().setCenter(data.Mark_Coord);
+    } else if (data.Mark_Type == "LineString") {
+        map.getView().setCenter(data.Mark_Coord);
+    } else if (data.Mark_Type == "Polygon") {
+        map.getView().setCenter(data.Mark_Coord);
+    }
+}
+function updateMarkList(data) {
+    var list = "";
+    if (data.length <= 0) {
+        list = "<li onclick='stopEvent(event)'><a  class='ship-none'>暂无标注</a></li>";
+        source.clear();
+    } else {
+        $.each(data, function (index, element) {
+            list += "<li class=‘markInfo’ data-id=" + element.Mark_ID + " onclick='stopEvent(event)'>";
+            list += "<a  data-id=" + element.Mark_ID + ">" + element.Mark_Name + "</a>";
+            list += "<span class='fleet-edit edit' data-id=" + element.Mark_ID + "></span>";
+            list += "<span class='fleet-del del' data-id=" + element.Mark_ID + "></span>";
+            // list += "<input type='hidden' name='LONG' class='fleet-long' value=" + element.LONG + " />";
+            // list += "<input type='hidden' name='LAT' class='fleet-lat' value=" + element.LAT + " />";
+            list += "</li>";
+        });
+    }
+    $("#submenu-two2").html(list);
+    markListOperate();
+}
+function markListOperate() {
+    $('#submenu-two2 li a:not(.mark-none)').dblclick(function (event) {
+        stopEvent(event);
+        var me = $(this);
+        var id = me.attr("data-id");
+        $.ajax({
+            url: basePath + "/editajax",
+            type: 'post',
+            data: {
+                Mark_ID: id
+            },
+            dataType: 'json',
+            timeout: 1000,
+            cache: false,
+            error: erryFunction,  //错误执行方法
+            success: seeMarkCenter //成功执行方法
+        });
+        function erryFunction() {
+            alert("error");
+        }
+    });
+
+    $(".matk-edit").click(function (event) {
+        var me = $(this);
+        var id = me.attr("data-id");
+        $("#id").val(id);
+        $.ajax({
+            url: basePath + "/editajax",
+            contentType: "application/x-www-form-urlencoded; charset=GBK",
+            type: 'post',
+            data: {
+                Mark_ID: id
+            },
+            dataType: 'json',
+            timeout: 1000,
+            cache: false,
+            error: erryFunction,  //错误执行方法
+            success: seeMarkCenter //成功执行方法
+        });
+        function erryFunction() {
+            alert("error");
+        }
+
+        stopEvent(event);
+    });
+    /*删除*/
+    $(".mark-del").click(function (event) {
+        stopEvent(event);
+        var me = $(this);
+        var id = me.attr("data-id");
+
+        $.ajax({
+            type: "post",
+            url: basePath + "/delajax",
+            dataType: "json",
+            contentType: "application/x-www-form-urlencoded; charset=GBK",
+            data: {
+                Mark_ID: id
+            },
+            success: function (data) {
+                source.removeFeature(source.getFeatureById(id));
+                updateMarkList(data);
+            },
+            error: function (data) {
+                alert(data);
+            }
+        });
+    });
+}
+markListOperate();
 var markName = null;
 /*实现标注与测距功能*/
 function init(ulname, name, count) {
@@ -88,10 +236,9 @@ function init(ulname, name, count) {
             markDraw.on('drawend', function (evt) {
                 var markPopup = document.getElementById("mark-popup");
                 var markNameSave = document.getElementById("mark-name-save");
-                markFeatureID = markFeatureID + 1;
+                var markFeatureID;
+                markFeatureID = generateUUID();
                 markFeature = evt.feature;
-                var coord = markFeature.getGeometry().getCoordinates();
-                console.log(coord);
                 markFeature.setId(markFeatureID);
                 console.log(markFeature.getId());
                 markPopup.style.display = "block";
@@ -130,18 +277,31 @@ function init(ulname, name, count) {
                         });
                         markFeature.setStyle(markStyle);
                         map.addInteraction(markDraw);
+                        var Name = markName.value;
+                        var type = markFeature.getGeometry().getType();
+                        var coord = markFeature.getGeometry().getCoordinates();
+                        console.log(coord);
+                        $.ajax({
+                            type: "post",
+                            url: basePath + "/delajax",
+                            dataType: "json",
+                            contentType: "application/x-www-form-urlencoded; charset=GBK",
+                            data: {
+                                Mark_ID: markFeatureID,
+                                Mark_Name: Name,
+                                Mark_Type: type,
+                                Mark_Coord: coord
+
+                            },
+                            success: updateMarkList,
+                            error: function (data) {
+                                alert(data);
+                            }
+                        });
                         document.getElementById("mark-name").value = "未命名标注";
                     }
+
                 };
-
-
-                //console.log(evt.feature);
-                //var format = new ol.format.GeoJSON();
-                //format.writeFeature(evt.feature);
-                //var coord = evt.feature.getGeometry().getCoordinates();
-                //console.log(coord);
-                //var feature = new ol.Feature(new ol.geom.Point([12053737.17543087, 4402772.829226152]));
-                //source.addFeature(feature);
             });
         }
     }

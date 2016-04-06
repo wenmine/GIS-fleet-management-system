@@ -1,9 +1,6 @@
-import com.test.com.test.EditData;
+import com.test.com.test.EditBoats;
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
-import javax.servlet.ServletException;
-import javax.swing.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -14,12 +11,12 @@ import java.util.Map;
 /**
  * Created by Administrator on 2016/3/23 0023.
  */
-public class DelDataServlet extends javax.servlet.http.HttpServlet {
-    protected void doPost(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws ServletException, IOException {
+public class BoatsDelServlet extends javax.servlet.http.HttpServlet {
+    protected void doPost(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, IOException {
 
         String n=request.getParameter("Official_Number");
         try {
-            EditData.delete(n);
+            EditBoats.delete(n);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -28,7 +25,7 @@ public class DelDataServlet extends javax.servlet.http.HttpServlet {
         PrintWriter out = response.getWriter();
         JSONArray jsonArray =new JSONArray();
         try {
-            list=EditData.read();
+            list= EditBoats.read();
             jsonArray=jsonArray.fromObject(list);
             out.print(jsonArray.toString());
             out.close();
@@ -36,7 +33,7 @@ public class DelDataServlet extends javax.servlet.http.HttpServlet {
             e.printStackTrace();
         }
     }
-    protected void doGet(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, IOException {
 
     }
 

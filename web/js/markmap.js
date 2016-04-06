@@ -68,13 +68,53 @@ function markClose(that) {
         map.addInteraction(markDraw);
     }
 }
+
+//将后台传来的坐标字符串改为坐标数组
+function coordConver(marktype, coord) {
+    var coordFloatArr = [];//保存转换后的整型字符串
+    var i, j, k;
+    if (marktype == "Point") {
+        var coordStrArr = coord.split(" ");//分割成字符串数组
+        for (i = 0; i < coordStrArr.length; i++) {
+            coordFloatArr.push(parseFloat(coordStrArr[i]));
+        }
+    } else {
+        var temp = coord.split(",");
+        for (i = 0; i < temp.length; i++) {
+            var eachCoordStrArr = temp[i].split(" ");
+            var eachTemp = [];
+            for (j = 0; j < eachCoordStrArr.length; j++) {
+                eachTemp.push(parseFloat(eachCoordStrArr[j]));
+            }
+            coordFloatArr.push(eachTemp);
+        }
+    }
+    return coordFloatArr;
+}
+
+$(".markInfo").each(function (index) {
+    var This = $(this);
+    var markId = This.attr("data-id");
+    var markName = This.attr("data-name");
+    var marktype = This.attr("data-type");
+    var coord = This.attr("data-coord");
+    var coordFloatArr = coordConver(marktype, coord);
+    console.log(coordFloatArr);
+    drawMark(markId, markName, marktype, coordFloatArr);
+});
+
 function drawMark(markId, name, type, coord) {
-    var data = {
-        "type": "Feature",
-        "geometry": {"type": type, "coordinates": coord}
-    };
-    var feature = ol.format.GeoJSON.readFeature(data);
-    feature.setId(id);
+    var feature;
+    console.log(type + coord + markId + name);
+    if(type == "Point"){
+       feature = new ol.Feature(new ol.geom.Point(coord));
+    }else if(type == "LineString"){
+        feature = new ol.Feature(new ol.geom.LineString(coord));
+    }else if(type == "Polygon"){
+        feature = new ol.Feature({  geometry: new ol.geom.Polygon([coord])});
+    }
+
+    feature.setId(markId);
     var markStyle = new ol.style.Style({
         fill: new ol.style.Fill({
             color: 'rgba(255,255,255,0.2)'
@@ -106,43 +146,29 @@ function drawMark(markId, name, type, coord) {
     feature.setStyle(markStyle);
     source.addFeature(feature);
 }
-(function () {
-    $(".markInfo").each(function (index) {
-        var This = $(this);
-        var markId = This.attr("data-id");
-        var markName = This.attr("data-name");
-        var marktype = This.attr("data-type");
-        var coord = This.attr("data-coord");
-
-        console.log(long + "," + lat);
-        drawMark(markId, markName, marktype, coord);
-    });
-})();
-
-
 function seeMarkCenter(data) {
-    var json = eval(data); //数组
-    if (data.Mark_Type == "Point") {
-        map.getView().setCenter(data.Mark_Coord);
-    } else if (data.Mark_Type == "LineString") {
-        map.getView().setCenter(data.Mark_Coord);
-    } else if (data.Mark_Type == "Polygon") {
-        map.getView().setCenter(data.Mark_Coord);
+    var coord = [];
+    console.log(data);
+    coord = coordConver(data.Type, data.Geo);
+    if (data.Type == "Point") {
+        map.getView().setCenter(coord);
+    } else if (data.Type == "LineString") {
+        map.getView().setCenter(coord[1]);
+    } else if (data.Type == "Polygon") {
+        map.getView().setCenter(coord[1]);
     }
 }
 function updateMarkList(data) {
     var list = "";
+    console.log(data);
     if (data.length <= 0) {
         list = "<li onclick='stopEvent(event)'><a  class='ship-none'>暂无标注</a></li>";
         source.clear();
     } else {
         $.each(data, function (index, element) {
-            list += "<li class=‘markInfo’ data-id=" + element.Mark_ID + " onclick='stopEvent(event)'>";
-            list += "<a  data-id=" + element.Mark_ID + ">" + element.Mark_Name + "</a>";
-            list += "<span class='fleet-edit edit' data-id=" + element.Mark_ID + "></span>";
-            list += "<span class='fleet-del del' data-id=" + element.Mark_ID + "></span>";
-            // list += "<input type='hidden' name='LONG' class='fleet-long' value=" + element.LONG + " />";
-            // list += "<input type='hidden' name='LAT' class='fleet-lat' value=" + element.LAT + " />";
+            list += "<li class=‘markInfo’ data-id=" + element.Id + "data-type=" + element.Type + "data-name=" + element.Name + "data-coord=" + element.Geo + " onclick='stopEvent(event)'>";
+            list += "<a  data-id=" + element.Id + ">" + element.Name + "</a>";
+            list += "<span class='mark-del del' data-id=" + element.Id + "></span>";
             list += "</li>";
         });
     }
@@ -155,7 +181,7 @@ function markListOperate() {
         var me = $(this);
         var id = me.attr("data-id");
         $.ajax({
-            url: basePath + "/editajax",
+            url: basePath + "/editgeo",
             type: 'post',
             data: {
                 Mark_ID: id
@@ -171,38 +197,15 @@ function markListOperate() {
         }
     });
 
-    $(".matk-edit").click(function (event) {
-        var me = $(this);
-        var id = me.attr("data-id");
-        $("#id").val(id);
-        $.ajax({
-            url: basePath + "/editajax",
-            contentType: "application/x-www-form-urlencoded; charset=GBK",
-            type: 'post',
-            data: {
-                Mark_ID: id
-            },
-            dataType: 'json',
-            timeout: 1000,
-            cache: false,
-            error: erryFunction,  //错误执行方法
-            success: seeMarkCenter //成功执行方法
-        });
-        function erryFunction() {
-            alert("error");
-        }
-
-        stopEvent(event);
-    });
     /*删除*/
     $(".mark-del").click(function (event) {
         stopEvent(event);
         var me = $(this);
         var id = me.attr("data-id");
-
+        console.log(id);
         $.ajax({
             type: "post",
-            url: basePath + "/delajax",
+            url: basePath + "/delgeo",
             dataType: "json",
             contentType: "application/x-www-form-urlencoded; charset=GBK",
             data: {
@@ -240,7 +243,7 @@ function init(ulname, name, count) {
                 markFeatureID = generateUUID();
                 markFeature = evt.feature;
                 markFeature.setId(markFeatureID);
-                console.log(markFeature.getId());
+
                 markPopup.style.display = "block";
                 map.removeInteraction(markDraw);
                 markNameSave.onclick = function () {
@@ -280,18 +283,16 @@ function init(ulname, name, count) {
                         var Name = markName.value;
                         var type = markFeature.getGeometry().getType();
                         var coord = markFeature.getGeometry().getCoordinates();
-                        console.log(coord);
                         $.ajax({
                             type: "post",
-                            url: basePath + "/delajax",
+                            url: basePath + "/addgeo",
                             dataType: "json",
                             contentType: "application/x-www-form-urlencoded; charset=GBK",
                             data: {
                                 Mark_ID: markFeatureID,
                                 Mark_Name: Name,
                                 Mark_Type: type,
-                                Mark_Coord: coord
-
+                                Mark_Coord: coord.join()
                             },
                             success: updateMarkList,
                             error: function (data) {

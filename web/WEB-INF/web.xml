@@ -8,40 +8,82 @@
         <servlet-class>LoginServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>AddDataServlet</servlet-name>
-        <servlet-class>AddDataServlet</servlet-class>
+        <servlet-name>BoatsAddServlet</servlet-name>
+        <servlet-class>BoatsAddServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>EditDataServlet</servlet-name>
-        <servlet-class>EditDataServlet</servlet-class>
+        <servlet-name>BoatsEditServlet</servlet-name>
+        <servlet-class>BoatsEditServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>DelDataServlet</servlet-name>
-        <servlet-class>DelDataServlet</servlet-class>
+        <servlet-name>BoatsDelServlet</servlet-name>
+        <servlet-class>BoatsDelServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ReadDataServlet</servlet-name>
-        <servlet-class>ReadDataServlet</servlet-class>
+        <servlet-name>GeoAddServlet</servlet-name>
+        <servlet-class>GeoAddServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GeoDelServlet</servlet-name>
+        <servlet-class>GeoDelServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GeoEditServlet</servlet-name>
+        <servlet-class>GeoEditServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AlertAddServlet</servlet-name>
+        <servlet-class>AlertAddServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AlertDelServlet</servlet-name>
+        <servlet-class>AlertDelServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AlertEditServlet</servlet-name>
+        <servlet-class>AlertEditServlet</servlet-class>
+    </servlet>
+
+
 
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>AddDataServlet</servlet-name>
-        <url-pattern>/addajax</url-pattern>
+        <servlet-name>BoatsAddServlet</servlet-name>
+        <url-pattern>/addboats</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>EditDataServlet</servlet-name>
-        <url-pattern>/editajax</url-pattern>
+        <servlet-name>BoatsEditServlet</servlet-name>
+        <url-pattern>/editboats</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>DelDataServlet</servlet-name>
-        <url-pattern>/delajax</url-pattern>
+        <servlet-name>BoatsDelServlet</servlet-name>
+        <url-pattern>/delboats</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ReadDataServlet</servlet-name>
-        <url-pattern>/json</url-pattern>
+        <servlet-name>GeoAddServlet</servlet-name>
+        <url-pattern>/addgeo</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GeoDelServlet</servlet-name>
+        <url-pattern>/delgeo</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GeoEditServlet</servlet-name>
+        <url-pattern>/editgeo</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AlertAddServlet</servlet-name>
+        <url-pattern>/addalert</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AlertDelServlet</servlet-name>
+        <url-pattern>/delalert</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AlertEditServlet</servlet-name>
+        <url-pattern>/editalert</url-pattern>
     </servlet-mapping>
 </web-app>

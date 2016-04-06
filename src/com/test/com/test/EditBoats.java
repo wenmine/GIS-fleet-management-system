@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * Created by Administrator on 2016/2/26 0026.
  */
-public class EditData {
+public class EditBoats {
     //链接数据库
     public static Connection getconn(){
         Connection conn = null;

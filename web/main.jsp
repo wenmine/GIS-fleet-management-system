@@ -1,7 +1,9 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="com.test.com.test.EditData" %>
+<%@ page import="com.test.com.test.EditBoats" %>
+<%@ page import="com.test.com.test.EditGeo" %>
+<%@ page import="com.test.com.test.EditAlert" %>
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
@@ -14,11 +16,15 @@
     String path = request.getContextPath();
     String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
     List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-    list = EditData.read();
+    list = EditBoats.read();
+    List<Map<String, Object>> geolist = new ArrayList<Map<String, Object>>();
+    geolist = EditGeo.read();
+    List<Map<String, Object>> alertlist = new ArrayList<Map<String, Object>>();
+    alertlist = EditAlert.read();
 %>
 <html>
 <head>
-    <title>Title</title>
+    <title>GIS船队管理系统</title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/ol.css" type="text/css">
@@ -70,7 +76,6 @@
                     <%
                             }
                         }
-
                     %>
                 </ul>
             </li>
@@ -90,26 +95,26 @@
             </li>
             <li id="left-two2" onclick="init('left-nav2','two',2)" class="list-title-up"><a><span class="icon"></span>标绘信息管理</a>
                 <ul id="submenu-two2" class="left-one-submenu">
-                            <%--<%--%>
-                        <%--if (list == null || list.isEmpty()) {--%>
-                    <%--%>--%>
-                    <%--<li onclick="stopEvent(event)"><a class="mark-none">暂无标注</a></li>--%>
-                    <%--<%--%>
-                    <%--} else {--%>
-                        <%--for (Map<String, Object> stringObjectMap : list) {--%>
-                    <%--%>--%>
-                    <%--<li class="markInfo" data-id="<%=stringObjectMap.get("Official_Number") data-type="" data-name="" data-coord=""%>"--%>
-                        <%--onclick="stopEvent(event)">--%>
-                        <%--<a data-id="<%=stringObjectMap.get("Official_Number")%>"><%=stringObjectMap.get("Official_Number")%>--%>
-                        <%--</a>--%>
-                        <%--<span class="mark-edit edit" data-id="<%=stringObjectMap.get("Official_Number")%>"></span>--%>
-                        <%--<span class="mark-del del" data-id="<%=stringObjectMap.get("Official_Number")%>"></span>--%>
-                    <%--</li>--%>
-                    <%--<%--%>
-                            <%--}--%>
-                        <%--}--%>
+                    <%
+                        if (list == null || list.isEmpty()) {
+                    %>
+                    <li onclick="stopEvent(event)"><a class="mark-none">暂无标注</a></li>
+                    <%
+                    } else {
+                        for (Map<String, Object> stringObjectMap : geolist) {
+                    %>
+                    <li class="markInfo" data-id="<%=stringObjectMap.get("Id")%>" data-type="<%=stringObjectMap.get("Type")%>"
+                        data-name="<%=stringObjectMap.get("Name")%>" data-coord="<%=stringObjectMap.get("Geo")%>"
+                        onclick="stopEvent(event)">
+                        <a data-id="<%=stringObjectMap.get("Id")%>"><%=stringObjectMap.get("Name")%>
+                        </a>
+                        <span class="mark-del del" data-id="<%=stringObjectMap.get("Id")%>"></span>
+                    </li>
+                    <%
+                            }
+                        }
 
-                    <%--%>--%>
+                    %>
                 </ul>
             </li>
             <li id="left-two3" onclick="measureInit('left-nav2','two',3)" class="list-title-up"><a><span
@@ -133,7 +138,29 @@
                     </select>
                 </ul>
             </li>
-            <li id="left-three2" class="list-title-up"><a><span class="icon"></span>报警区域管理</a></li>
+            <li id="left-three2" onclick="init('left-nav3','three',2)" class="list-title-up"><a><span class="icon"></span>报警区域管理</a>
+                <ul id="submenu-three2" class="left-one-submenu">
+                    <%
+                        if (list == null || list.isEmpty()) {
+                    %>
+                    <li onclick="stopEvent(event)"><a class="warn-none">暂无设置区域</a></li>
+                    <%
+                    } else {
+                        for (Map<String, Object> stringObjectMap : alertlist) {
+                    %>
+                    <li class="warnInfo" data-id="<%=stringObjectMap.get("Id")%>" data-name="<%=stringObjectMap.get("Name")%>"
+                        data-coord="<%=stringObjectMap.get("Geo")%>" onclick="stopEvent(event)">
+                        <a data-id="<%=stringObjectMap.get("Id")%>"><%=stringObjectMap.get("Name")%>
+                        </a>
+                        <span class="warn-del del" data-id="<%=stringObjectMap.get("Id")%>"></span>
+                    </li>
+                    <%
+                            }
+                        }
+
+                    %>
+                </ul>
+            </li>
             <li id="left-three3" class="list-title-up"><a><span class="icon"></span>区域提醒</a></li>
         </ul>
 
@@ -208,8 +235,8 @@
 <script type="text/javascript" src="js/ol-debug.js"></script>
 <script type="text/javascript" src="js/map.js"></script>
 <script type="text/javascript" src="js/fleetmap.js"></script>
-<script src="js/fleet.js"></script>
 <script type="text/javascript" src="js/markmap.js"></script>
+<script src="js/fleet.js"></script>
 <script type="text/javascript" src="js/measuremap.js"></script>
 <script type="text/javascript" src="js/warnmap.js"></script>
 <script src="js/drag.js"></script>

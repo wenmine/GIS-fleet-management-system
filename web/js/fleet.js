@@ -207,11 +207,11 @@ function addShipToBox(tt) {
 
 function updateShipList(data) {
     var list = "";
+    clearFleet();
     if (data.length <= 0) {
         $("#add-ship").hide();
         clearForm("add-ship-form");
         list = "<li onclick='stopEvent(event)'><a  class='ship-none'>暂无船队</a></li>";
-        clearFleet();
     } else {
         $.each(data, function (index, element) {
             list += "<li  class=‘fleetInfo’ data-id=" + element.Official_Number + " onclick='stopEvent(event)'>";
@@ -221,7 +221,6 @@ function updateShipList(data) {
             list += "<input type='hidden' name='LONG' class='fleet-long' value=" + element.LONG + " />";
             list += "<input type='hidden' name='LAT' class='fleet-lat' value=" + element.LAT + " />";
             list += "</li>";
-            clearFleet();
             drawFleet(element.Official_Number,element.LONG,element.LAT);
         });
 
@@ -253,7 +252,7 @@ function shipListOperate() {
         var id = me.attr("data-id");
         $("#id").val(id);
         $.ajax({
-            url: basePath + "/editajax",
+            url: basePath + "/editboats",
             type: 'post',
             data: {
                 Official_Number: id
@@ -285,7 +284,7 @@ function shipListOperate() {
         var id = me.attr("data-id");
         $("#id").val(id);
         $.ajax({
-            url: basePath + "/editajax",
+            url: basePath + "/editboats",
             contentType: "application/x-www-form-urlencoded; charset=GBK",
             type: 'post',
             data: {
@@ -313,7 +312,7 @@ function shipListOperate() {
         console.log("delete");
         $.ajax({
             type: "post",
-            url: basePath + "/delajax",
+            url: basePath + "/delboats",
             dataType: "json",
             contentType: "application/x-www-form-urlencoded; charset=GBK",
             data: {
@@ -365,7 +364,7 @@ function addShipSubmit() {
     }
     $.ajax({
         type: "post",
-        url: basePath + "/addajax",
+        url: basePath + "/addboats",
         contentType: "application/x-www-form-urlencoded; charset=GBK",
         data: $("#add-ship-form").serialize(),
         dataType: "json",
@@ -378,13 +377,13 @@ function addShipSubmit() {
     //addShipInfoToList();
     clearForm("add-ship-form");
 }
+
 //定时刷新
 // function refresh() {
 //     $.ajax({
 //         type: "post",
 //         url: basePath + "/addajax",
 //         contentType: "application/x-www-form-urlencoded; charset=GBK",
-//         data: $("#add-ship-form").serialize(),
 //         dataType: "json",
 //         success: updateShipList,
 //         error: function (data) {

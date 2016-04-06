@@ -105,10 +105,12 @@ var fleetStyle = new ol.style.Style({
     }),
     image: new ol.style.Icon(({
         anchor: [0.5, 46],
-        anchorXUnits: 'fraction',
+        anchorXUnits: 'pixels',
         anchorYUnits: 'pixels',
+        scale: 0.8,
         opacity: 0.75,
-        src: '../image/fleeticon.jpg'
+        src: '../image/fleeticon.png'
+
     })),
     text: new ol.style.Text({
         text: "",
@@ -131,7 +133,6 @@ var fleet_vector = new ol.layer.Vector({
     source: fleet_source,
     style: fleetStyle
 });
-console.log(fleet_source);
 /*测距相关*/
 //临时测距图层的数据源
 range_source = new ol.source.Vector();
@@ -147,7 +148,7 @@ warnStyle = new ol.style.Style({
         color: 'rgba(255,255,255,0.2)'
     }),
     stroke: new ol.style.Stroke({
-        color: '#0c95f8',
+        color: '#ff0000',
         width: 2
     })
 });
@@ -169,7 +170,7 @@ map = new ol.Map({
     layers: [baidu_layer, vector, range_vector, fleet_vector, warn_vector],
     view: new ol.View({
         center: [12959773, 4853101],//设置地图中心
-        zoom: 5 //初始的缩放等级
+        zoom: 6 //初始的缩放等级
     })
 });
 $(".fleetInfo").each(function (index) {
@@ -177,7 +178,7 @@ $(".fleetInfo").each(function (index) {
     var fleetId = This.attr("data-id");
     var long = This.find("input[name='LONG']").first().val();
     var lat = This.find("input[name='LAT']").first().val();
-    console.log(long + "," + lat);
+
     drawFleet(fleetId, long, lat);
 });
 
@@ -185,8 +186,9 @@ function clearFleet() {
     fleet_source.clear();
 }
 function drawFleet(fleetId, long, lat) {
+    var fleetcoord = ol.proj.fromLonLat([parseFloat(long),parseFloat(lat)],'EPSG:3857');
+    var fleetFeature = new ol.Feature(new ol.geom.Point(fleetcoord));
 
-    var fleetFeature = new ol.Feature(new ol.geom.Point([long, lat]));
     var fleetStyle = new ol.style.Style({
         fill: new ol.style.Fill({
             color: 'rgba(255,255,255,0.2)'
@@ -200,11 +202,11 @@ function drawFleet(fleetId, long, lat) {
             anchorXUnits: 'fraction',
             anchorYUnits: 'pixels',
             opacity: 0.75,
-            src: '../image/fleeticon.jpg'
+            src: '../image/fleeticon.png'
         })),
         text: new ol.style.Text({
             text: fleetId,
-            offsetY: 0,
+            offsetY: -15,
             textAlign: 'center',
             fill: new ol.style.Fill({
                 color: 'rgba(255,255,255,0.2)'
@@ -216,7 +218,6 @@ function drawFleet(fleetId, long, lat) {
         })
     });
     fleetFeature.setStyle(fleetStyle);
-    console.log(fleet_source);
     fleet_source.addFeature(fleetFeature);
 }
 

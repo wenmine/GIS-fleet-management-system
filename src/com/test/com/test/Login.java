@@ -13,7 +13,7 @@ public class Login {
     public  static  boolean checkUser(String name,String pwd) throws SQLException {
         Connection conn = null;
         String sql;
-        String url = "jdbc:mysql://localhost:3306/test?user=root&password=";
+        String url = "jdbc:mysql://localhost:3306/test?user=root&password=940504";
         boolean flag = false;
         try {
             Class.forName("com.mysql.jdbc.Driver");

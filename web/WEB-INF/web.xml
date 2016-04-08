@@ -20,6 +20,10 @@
         <servlet-class>BoatsDelServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>BoatsReadServlet</servlet-name>
+        <servlet-class>BoatsReadServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>GeoAddServlet</servlet-name>
         <servlet-class>GeoAddServlet</servlet-class>
     </servlet>
@@ -61,6 +65,10 @@
     <servlet-mapping>
         <servlet-name>BoatsDelServlet</servlet-name>
         <url-pattern>/delboats</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BoatsReadServlet</servlet-name>
+        <url-pattern>/readboats</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>GeoAddServlet</servlet-name>

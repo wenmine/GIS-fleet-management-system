@@ -10,8 +10,7 @@ var warnStyle = null;
 var warnSource = null;
 
 var format = 'image/png';
-var bounds = [73.4510046356223, 18.1632471876417,
-    134.976797646506, 53.5319431522236];
+
 var controls = new Array();
 //比例尺
 var scaleLineControl = new ol.control.ScaleLine({});
@@ -21,6 +20,15 @@ controls.push(scaleLineControl);
 var fullScreenControl = new ol.control.FullScreen({});
 controls.push(fullScreenControl);
 
+//
+var mousePositionControl = new ol.control.MousePosition({
+    coordinateFormat: ol.coordinate.createStringXY(4),
+    projection: 'EPSG:4326',
+    className: 'custom-mouse-position',
+    target: document.getElementById('mouse-position'),
+    undefinedHTML: '&nbsp;'
+});
+controls.push(mousePositionControl);
 //缩放控件
 var zoomSliderControl = new ol.control.ZoomSlider({});
 controls.push(zoomSliderControl);
@@ -173,6 +181,7 @@ map = new ol.Map({
         zoom: 6 //初始的缩放等级
     })
 });
+
 $(".fleetInfo").each(function (index) {
     var This = $(this);
     var fleetId = This.attr("data-id");
@@ -186,8 +195,10 @@ function clearFleet() {
     fleet_source.clear();
 }
 function drawFleet(fleetId, long, lat) {
-    var fleetcoord = ol.proj.fromLonLat([parseFloat(long),parseFloat(lat)],'EPSG:3857');
-    var fleetFeature = new ol.Feature(new ol.geom.Point(fleetcoord));
+    //1.var fleetcoord = ol.proj.fromLonLat([parseFloat(long),parseFloat(lat)],'EPSG:3857');可用来转换
+    //2.new ol.geom.Point([parseFloat(long),parseFloat(lat)]).transform('EPSG:4326','EPSG:3857')也可转换坐标系
+
+    var fleetFeature = new ol.Feature(new ol.geom.Point([parseFloat(long),parseFloat(lat)]).transform('EPSG:4326','EPSG:3857'));
 
     var fleetStyle = new ol.style.Style({
         fill: new ol.style.Fill({
@@ -220,5 +231,6 @@ function drawFleet(fleetId, long, lat) {
     fleetFeature.setStyle(fleetStyle);
     fleet_source.addFeature(fleetFeature);
 }
+
 
 

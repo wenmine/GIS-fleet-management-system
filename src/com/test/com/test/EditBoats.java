@@ -66,7 +66,6 @@ public class EditBoats {
         while (rs.next()) {
             if (rs.getString(1).equals(s[0])){
                 t = 1;
-//                sql="UPDATE  boats SET Call_Sign = 'AAAA' WHERE Official_Number="+s[0];
                 sql="UPDATE boats SET ";
                 for(i=0;i<7;i++){
                     sql= sql + title[i] + "'"+s[i+1] + "'";
@@ -80,20 +79,21 @@ public class EditBoats {
         }
         if (t != 1) {
             //分配经纬度；
-            Random random = new Random();
-            double lat = 0;
-            double lon = random.nextDouble() * (131 - 109.33) + 109.33;
-            if (lon >= 109.33 && lon < 117.50)
-                lat = random.nextDouble() * (34 - 11.5) + 11.55;
-            else if (lon >= 117.50 && lon < 121.10)
-                lat = random.nextDouble() * (41 - 37.07) + 37.07;
-            else if (lon >= 121.10 && lon < 123)
-                lat = random.nextDouble() * (45 - 35) + 35;
-            else if (lon >= 123 && lon < 131)
-                lat = random.nextDouble() * (33.10 - 23) + 23;
-            s[8]=Double.toString(lon);
-            s[9]=Double.toString(lat);
-            sql = "INSERT INTO boats VALUES (" + s[0] + ",'" + s[1] + "','" + s[2] + "','" + s[3] + "','" + s[4] + "','" + s[5] + "','" + s[6] + "','" + s[7] + "','" + s[8] + "','" + s[9] + "')";
+            String[] position=new String[2];
+            String[] res= new String[2];
+            position=Pos();
+            res=check(position[0],position[1]);
+            while(res[0]==null&&res[1]==null)
+            {
+                position=Pos();
+                res=check(position[0],position[1]);
+            }
+            String alert[] = AlertArea(position[0],position[1]);
+            s[8]=position[0];
+            s[9]=position[1];
+            s[10]=alert[0];
+            s[11]=alert[1];
+            sql = "INSERT INTO boats VALUES (" + s[0] + ",'" + s[1] + "','" + s[2] + "','" + s[3] + "','" + s[4] + "','" + s[5] + "','" + s[6] + "','" + s[7] + "','" + s[8] + "','" + s[9] + "','" + s[10] + "','" + s[11] + "')";
             try {
                 pstmt = conn.prepareStatement(sql);
                 i = pstmt.executeUpdate();
@@ -103,8 +103,6 @@ public class EditBoats {
                 e.printStackTrace();
             }
         }
-        else {
-        }
         return flag;
     }
 
@@ -112,8 +110,7 @@ public class EditBoats {
     //读取数据库
     public static List<Map<String, Object>> read() throws SQLException{
         Connection conn=getconn();
-        String title[] = new String[]{"Official_Number","Chinese_Name","English_Name","Call_Sign","Type","Flag","Owner","Port_Registry","LONG","LAT"};
-        String datalist[] = new String[11];
+        String title[] = new String[]{"Official_Number","Chinese_Name","English_Name","Call_Sign","Type","Flag","Owner","Port_Registry","LONG","LAT","Alert","Area"};
         String sql;
         sql="select * from boats";
         Statement stmt = conn.createStatement();
@@ -121,10 +118,186 @@ public class EditBoats {
         List<Map<String,  Object>> list = new ArrayList<Map<String, Object>>();
         while(rs.next()){
             Map<String,Object>map=new HashMap<String,Object>();
-            for(int i=1;i<11;i++)
+            for(int i=1;i<13;i++)
                  map.put(title[i-1],rs.getString(i));
             list.add(map);
         }
         return list;
+    }
+
+    //船舶移动
+    public  static void move() throws  SQLException{
+        Connection conn=getconn();
+        String sql;
+        sql="select * from boats";
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+        Statement st = conn.createStatement();
+        while (rs.next()) {
+            String x = rs.getString(9);
+            String y = rs.getString(10);
+            String[] pos=new String[2];
+            String[] res=new String[2];
+            pos=Position(x,y);
+            res=check(pos[0],pos[1]);
+            while(res[0]==null&&res[1]==null)
+            {
+                pos=Position(x,y);
+                res=check(pos[0],pos[1]);
+            }
+            String flag[] = AlertArea(pos[0], pos[1]);
+            sql="UPDATE boats SET LNG="+pos[0]+",LAT="+pos[1]+",Alert='"+flag[0]+"',Area='"+flag[1]+"' WHERE Official_Number="+rs.getInt(1);
+            st.executeUpdate(sql);
+        }
+    }
+
+    public static String[] check(String x,String y) throws SQLException {
+        Connection conn=getconn();String sql;
+        sql="select * from boats";
+        Statement st = null;
+        st = conn.createStatement();
+        ResultSet rf = st.executeQuery(sql);
+        String[] res = new String[2];
+        res[0]=x;
+        res[1]=y;
+        while (rf.next()) {
+            if ((rf.getString(9).equals(x)) && (rf.getString(10).equals(y))) {
+                res[0]="";
+                res[1]="";
+            }
+        }
+        return res;
+    }
+
+    public static String[] Pos() {
+        String[] s = new String[2];
+        Random random = new Random();
+        double lat = 0;
+        int f = random.nextInt()*(1-0)+1;
+        double lon;
+        if(f==0) {
+            lon = random.nextDouble() * (120.9639 - 111) + 111;
+        }
+        else{
+            lon = random.nextDouble() * (129 - 122) + 122;
+        }
+
+        if(lon >= 119.2939 && lon < 120.9639){
+            lat = random.nextDouble() * (39.4022 - 37.7881) + 37.7881;
+        }
+        else if (lon >= 111.3398 && lon < 120.1948) {
+            lat = random.nextDouble() * (20 - 10) + 10;
+        }
+        else if (lon >= 122.3921 && lon < 124.3037) {
+            lat = random.nextDouble() * (38.6855 - 37.7186) + 37.7186;
+        }
+        else if (lon >= 122 && lon < 126) {
+            lat = random.nextDouble() * (36.3151 - 32) + 32;
+        }
+        else if (lon >= 122 && lon < 129) {
+            lat = random.nextDouble() * (32 - 25.2646) + 25.2646;
+        }
+        s[0]=Double.toString(lon);
+        s[1]=Double.toString(lat);
+        return s;
+    }
+
+    public static String[] Position(String s1,String s2) {
+        String[] s = new String[2];
+        Double x = Double.parseDouble(s1);
+        Double y = Double.parseDouble(s2);
+        Random random = new Random();
+        Double xf ;
+        Double yf ;
+        //修改经度
+        if(x>=111&&x<120.9639) {
+            xf =  random.nextDouble() * (120.9639 - 111) + 111;
+            while(Math.abs(x-xf)>0.03)
+            {
+                xf =  random.nextDouble() * (120.9639 - 111) + 111;
+            }
+        }
+        else {
+            xf = random.nextDouble() * (129 - 122) + 122;
+            while(Math.abs(x-xf)>0.03)
+            {
+                xf = random.nextDouble() * (129 - 122) + 122;
+            }
+        }
+
+
+        //修改纬度
+        if(y>=10&&y<20){
+            yf=random.nextDouble() * (20 - 10) + 10;
+            while(Math.abs(yf-y)>0.03)
+            {
+                yf=random.nextDouble() * (20 - 10) + 10;
+            }
+        }
+        else if(y>=25.2646&&y<=32){
+            yf=random.nextDouble() * (32 - 25.2646) + 25.2646;
+            while(Math.abs(yf-y)>0.03)
+            {
+                yf=random.nextDouble() * (32 - 25.2646) + 25.2646;
+            }
+        }
+        else if(y>=32&&y<=36.3151){
+            yf=random.nextDouble() * (36.3151 - 32) + 32;
+            while(Math.abs(yf-y)>0.03)
+            {
+                yf=random.nextDouble() * (36.3151 - 32) + 32;
+            }
+        }
+        else if(y>=37.7186&&y<=38.6855){
+            yf=random.nextDouble() * (38.6855 - 37.7186) + 37.7186;
+            while(Math.abs(yf-y)>0.03)
+            {
+                yf=random.nextDouble() * (38.6855 - 37.7186) + 37.7186;
+            }
+        }
+        else{
+            yf=random.nextDouble() * (39.4022 - 37.7881) + 37.7881;
+            while(Math.abs(yf-y)>0.03)
+            {
+                yf=random.nextDouble() * (39.4022 - 37.7881) + 37.7881;
+            }
+        }
+
+        s[0]=Double.toString(xf);
+        s[1]=Double.toString(yf);
+        return s;
+    }
+
+    public static String[] AlertArea(String x,String y) throws SQLException {
+        String alert[]=new String[2];
+        String point="POINT(";
+        point = point + x + " " + y + ")";
+        Connection conn=getconn();String sql;
+        sql="select * from alert";
+        Statement st = null;
+        st = conn.createStatement();
+        ResultSet rf = st.executeQuery(sql);
+        while (rf.next()){
+            String name = rf.getString(2);
+            sql="SELECT Astext(Pgn) From alert WHERE ID = \""+rf.getString(1)+"\"";
+            Statement s = null;
+            s = conn.createStatement();
+            ResultSet rt = s.executeQuery(sql);
+            rt.next();
+            String area = rt.getString(1);
+            sql="SELECT MBRContains(GeomFromText('"+area+"'),GeomFromText('"+point+"'))";
+            rt = s.executeQuery(sql);
+            rt.next();
+            String n = rt.getString(1);
+            if(n.equals("1")){
+                alert[0]="1";
+                alert[1]=name;
+            }
+            else{
+                alert[0]="0";
+                alert[1]="";
+            }
+        }
+        return alert;
     }
 }

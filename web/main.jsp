@@ -161,7 +161,6 @@
                     %>
                 </ul>
             </li>
-            <li id="left-three3" class="list-title-up"><a><span class="icon"></span>区域提醒</a></li>
         </ul>
 
     </div>
@@ -170,6 +169,7 @@
     <div id="map" class="map">
         <div id="location"></div>
     </div>
+    <div  id="mouse-position">&nbsp;</div>
     <div id="add-ship" class="add-ship">
         <div class="popup-top" id="popup-top">
             添加船舶
@@ -230,6 +230,13 @@
                 <input type="button" value="保存" id="warn-name-save">
             </form>
         </div>
+    </div>
+    <div id="alert-popup" class="alert-popup">
+        <div id="alert-popup-top" class="popup-top">
+            报警区域提醒
+            <span class="btnclose" onclick="alertClose(this)"></span>
+        </div>
+        <ul id="alertOutput"></ul>
     </div>
 </div>
 <script type="text/javascript" src="js/ol-debug.js"></script>

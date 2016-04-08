@@ -28,7 +28,9 @@ $(".warnInfo").each(function (index) {
 
 function drawWarn(warnId, name, coord) {
     var feature;
-    feature = new ol.Feature({geometry: new ol.geom.Polygon([coord])});
+    var polygon = new ol.geom.Polygon([coord]);
+    polygon.transform('EPSG:4326', 'EPSG:3857');
+    feature = new ol.Feature(polygon);
     feature.setId(warnId);
     var warnStyle = new ol.style.Style({
         fill: new ol.style.Fill({
@@ -56,12 +58,16 @@ function drawWarn(warnId, name, coord) {
 }
 function seeWarnCenter(data) {
     var coord = [];
+    var warnCoord;
     coord = coordConver("Polygon",data.Geo);
-    map.getView().setCenter(coord[1]);
+    warnCoord = ol.proj.fromLonLat(coord[1],'EPSG:3857');
+
+    map.getView().setCenter(warnCoord);
+
 }
 function updateWarnList(data) {
     var list = "";
-    console.log(data);
+
     if (data.length <= 0) {
         list = "<li onclick='stopEvent(event)'><a  class='ship-none'>暂无设置报警区域</a></li>";
         warnSource.clear();
@@ -140,7 +146,6 @@ function warnInit(ulname, name, count) {
                 var warnFeatureID = generateUUID();
                 warnFeature = evt.feature;
                 warnFeature.setId(warnFeatureID);
-                console.log(warnFeature.getId());
                 warnPopup.style.display = "block";
                 map.removeInteraction(warnDraw);
                 warnNameSave.onclick = function () {
@@ -152,7 +157,7 @@ function warnInit(ulname, name, count) {
                                 color: 'rgba(255,255,255,0.2)'
                             }),
                             stroke: new ol.style.Stroke({
-                                color: '#0c95f8',
+                                color: 'red',
                                 width: 2
                             }),
                             text: new ol.style.Text({
@@ -171,7 +176,8 @@ function warnInit(ulname, name, count) {
                         warnFeature.setStyle(warnStyle);
                         map.addInteraction(warnDraw);
                         var Name = warnName.value;
-                        var coord = warnFeature.getGeometry().getCoordinates();
+                        var coord = warnFeature.getGeometry().transform('EPSG:3857', 'EPSG:4326').getCoordinates();
+                        warnFeature.getGeometry().transform('EPSG:4326', 'EPSG:3857');
                         $.ajax({
                             type: "post",
                             url: basePath + "/addalert",

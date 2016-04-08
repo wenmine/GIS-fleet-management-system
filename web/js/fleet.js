@@ -181,6 +181,16 @@ function wSeeClose(that) {
     document.getElementById("close-see").style.display = "none";
     clearForm("add-ship-form");
 }
+function alertClose(that) {
+    that.parentNode.parentNode.style.display = "none";
+    var outputList=document.getElementById('alertOutput');
+    var list = outputList.getElementsByTagName("li");
+    var i = 0;
+    console.log(list.length);
+    for(i = 0;i<list.length;i++){
+        outputList.removeChild(list[i]);
+    }
+}
 function addShipToBox(tt) {
     var shipNum = $("#number");
     var chineseName = $("#chinese-name");
@@ -204,7 +214,23 @@ function addShipToBox(tt) {
     shipLong.val(json.LONG);
     shiplat.val(json.LAT);
 }
+function alertPopupShow(alertname, shipname) {
+    var alertPopup = document.getElementById("alert-popup");
+    var alertElement=document.createElement('li');
+    var outputList=document.getElementById('alertOutput');
+    if (alertPopup.style.display == "none") {
+        alertPopup.style.display = "block";
+    }
+    alertElement.innerHTML ="船舶 <span class='alert'>"+shipname+ "</span> 处于 <span class='alert'>"+alertname + "</span> 区域！";
+    if(outputList.childNodes){
+        outputList.insertBefore(alertElement,outputList.firstChild)
+    }
+    else{
+        outputList.appendChild(alertElement);
+    }
 
+
+}
 function updateShipList(data) {
     var list = "";
     clearFleet();
@@ -221,7 +247,10 @@ function updateShipList(data) {
             list += "<input type='hidden' name='LONG' class='fleet-long' value=" + element.LONG + " />";
             list += "<input type='hidden' name='LAT' class='fleet-lat' value=" + element.LAT + " />";
             list += "</li>";
-            drawFleet(element.Official_Number,element.LONG,element.LAT);
+            drawFleet(element.Official_Number, element.LONG, element.LAT);
+            if (element.Alert === '1') {
+                alertPopupShow(element.Area, element.Official_Number);
+            }
         });
 
     }
@@ -229,6 +258,30 @@ function updateShipList(data) {
     shipListOperate();
 }
 
+function refreshShipCoord(data) {
+    var list = "";
+    clearFleet();
+    if (data.length <= 0) {
+        list = "<li onclick='stopEvent(event)'><a  class='ship-none'>暂无船队</a></li>";
+    } else {
+        $.each(data, function (index, element) {
+            list += "<li  class=‘fleetInfo’ data-id=" + element.Official_Number + " onclick='stopEvent(event)'>";
+            list += "<a  data-id=" + element.Official_Number + ">" + element.Official_Number + "</a>";
+            list += "<span class='fleet-edit edit' data-id=" + element.Official_Number + "></span>";
+            list += "<span class='fleet-del del' data-id=" + element.Official_Number + "></span>";
+            list += "<input type='hidden' name='LONG' class='fleet-long' value=" + element.LONG + " />";
+            list += "<input type='hidden' name='LAT' class='fleet-lat' value=" + element.LAT + " />";
+            list += "</li>";
+            drawFleet(element.Official_Number, element.LONG, element.LAT);
+            if (element.Alert === '1') {
+                alertPopupShow(element.Area, element.Official_Number);
+            }
+        });
+
+    }
+    $("#submenu-one1").html(list);
+    shipListOperate();
+}
 $("#left-one2").click(function (event) {
     $("#popup-top").html("添加船舶" + " <span id='btnclose' class='btnclose' onclick='wClose(this)'></span>");
     document.getElementById("ship-warn").style.display = "block";
@@ -379,17 +432,17 @@ function addShipSubmit() {
 }
 
 //定时刷新
-// function refresh() {
-//     $.ajax({
-//         type: "post",
-//         url: basePath + "/addajax",
-//         contentType: "application/x-www-form-urlencoded; charset=GBK",
-//         dataType: "json",
-//         success: updateShipList,
-//         error: function (data) {
-//             alert("error");
-//         }
-//     });
-//     setTimeOut("refresh()",5000);
-// }
-// setTimeOut("refresh()",5000);
+function refresh() {
+    $.ajax({
+        type: "post",
+        url: basePath + "/readboats",
+        contentType: "application/x-www-form-urlencoded; charset=GBK",
+        dataType: "json",
+        success: refreshShipCoord,
+        error: function (data) {
+            alert("error");
+        }
+    });
+    setTimeout("refresh()",2000);
+}
+setTimeout("refresh()",2000);

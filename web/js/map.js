@@ -10,7 +10,9 @@ var warnStyle = null;
 var warnSource = null;
 
 var format = 'image/png';
+(function(){
 
+})();
 var controls = new Array();
 //比例尺
 var scaleLineControl = new ol.control.ScaleLine({});

@@ -4,7 +4,6 @@
 /*警告*/
 var warnFeature;
 var warnDraw = null;
-var warnFeatureID = 0;
 
 function warnClose(that) {
     that.parentNode.parentNode.style.display = "none";
